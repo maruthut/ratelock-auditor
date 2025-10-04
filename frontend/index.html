@@ -299,13 +299,24 @@
             const toCurrency = document.getElementById('toCurrency').value;
 
             // Validate inputs
-            if (!amount || !fromCurrency || !toCurrency) {
-                showError('Please fill in all fields');
+            if (!amount || amount <= 0) {
+                showError('Please enter a valid amount greater than 0');
+                return;
+            }
+
+            if (!fromCurrency || !toCurrency) {
+                showError('Please select both currencies');
                 return;
             }
 
             if (fromCurrency === toCurrency) {
                 showError('From and To currencies must be different');
+                return;
+            }
+
+            // Additional validation for reasonable amounts
+            if (amount > 1000000000) {
+                showError('Amount is too large for conversion');
                 return;
             }
 
@@ -315,9 +326,9 @@
             hideResult();
 
             try {
-                // Call the conversion API
+                // Call the conversion API with proper error handling
                 const response = await fetch(
-                    `${API_BASE_URL}/convert?from=${fromCurrency}&to=${toCurrency}&amount=${amount}`,
+                    `${API_BASE_URL}/convert?from=${encodeURIComponent(fromCurrency)}&to=${encodeURIComponent(toCurrency)}&amount=${encodeURIComponent(amount)}`,
                     {
                         method: 'GET',
                         headers: {
@@ -327,10 +338,16 @@
                 );
 
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
                 }
 
                 const data = await response.json();
+                
+                // Validate response data
+                if (!data.converted_amount && data.converted_amount !== 0) {
+                    throw new Error('Invalid response: missing converted amount');
+                }
                 
                 // Display results
                 displayResult(data, amount, fromCurrency, toCurrency);

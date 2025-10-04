@@ -9,10 +9,11 @@ import os
 import json
 import uuid
 import logging
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import Decimal, ROUND_HALF_UP, InvalidOperation
 from datetime import datetime, timezone
 from typing import Dict, Any, Optional, Tuple
 from flask import Flask, request, jsonify, make_response
+from flask_cors import CORS
 import boto3
 from botocore.exceptions import ClientError
 
@@ -25,6 +26,7 @@ logger = logging.getLogger(__name__)
 
 # Flask app initialization
 app = Flask(__name__)
+CORS(app)  # Enable CORS for frontend access
 
 class ConversionEngineService:
     """
@@ -51,8 +53,11 @@ class ConversionEngineService:
         Retrieve the most recent rate snapshot from the cache
         """
         try:
-            # Scan table to get all snapshots (in production, you might want to use a GSI)
-            response = self.rate_cache_table.scan()
+            # Use query with GSI if available, otherwise scan with limit
+            response = self.rate_cache_table.scan(
+                Limit=50,  # Limit to reduce cost
+                ProjectionExpression='RateSnapshotID, BaseCurrency, FetchDate, Rates, FetchTimestamp'
+            )
             items = response.get('Items', [])
             
             if not items:
@@ -61,6 +66,12 @@ class ConversionEngineService:
             
             # Sort by snapshot ID to get the latest (snapshots are timestamped)
             latest_snapshot = max(items, key=lambda x: x['RateSnapshotID'])
+            
+            # Validate the snapshot has required data
+            if not latest_snapshot.get('Rates'):
+                logger.error("Latest snapshot missing rates data")
+                return None
+                
             logger.info(f"Retrieved latest snapshot: {latest_snapshot['RateSnapshotID']}")
             return latest_snapshot
             
@@ -168,9 +179,11 @@ class ConversionEngineService:
                 amount_decimal = Decimal(amount)
                 if amount_decimal <= 0:
                     raise ValueError("Amount must be positive")
-            except (ValueError, TypeError) as e:
+                if amount_decimal > Decimal('1000000000'):  # 1 billion limit
+                    raise ValueError("Amount too large")
+            except (ValueError, TypeError, InvalidOperation) as e:
                 return {
-                    'error': f'Invalid amount: {amount}',
+                    'error': f'Invalid amount: {amount}. Must be a positive number.',
                     'status_code': 400
                 }
             
@@ -178,6 +191,16 @@ class ConversionEngineService:
             if not from_currency or not to_currency:
                 return {
                     'error': 'Missing currency codes',
+                    'status_code': 400
+                }
+            
+            # Normalize and validate currency format
+            from_currency_upper = from_currency.upper().strip()
+            to_currency_upper = to_currency.upper().strip()
+            
+            if len(from_currency_upper) != 3 or len(to_currency_upper) != 3:
+                return {
+                    'error': 'Currency codes must be 3 characters',
                     'status_code': 400
                 }
             

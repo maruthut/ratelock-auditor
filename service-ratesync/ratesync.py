@@ -44,33 +44,58 @@ class RateSyncService:
     def generate_snapshot_id(self) -> str:
         """
         Generate a unique Rate Snapshot ID based on current timestamp
-        Format: YYYYMMDD-HHMMUTC
+        Format: YYYYMMDD-HHMMUTC with microseconds for uniqueness
         """
         now = datetime.now(timezone.utc)
-        snapshot_id = now.strftime("%Y%m%d-%H%MUTC")
+        # Add microseconds to prevent collisions in rapid testing
+        snapshot_id = now.strftime("%Y%m%d-%H%M%fUTC")
         logger.info(f"Generated snapshot ID: {snapshot_id}")
         return snapshot_id
     
-    def fetch_rates_from_frankfurter(self) -> Optional[Dict[str, Any]]:
+    def check_existing_snapshot(self, snapshot_id: str) -> bool:
         """
-        Fetch the latest exchange rates from Frankfurter API
-        Returns rates with EUR as base currency
+        Check if a snapshot with the given ID already exists
         """
         try:
-            logger.info("Fetching rates from Frankfurter API...")
-            response = requests.get(self.frankfurter_api_url, timeout=30)
-            response.raise_for_status()
-            
-            data = response.json()
-            logger.info(f"Successfully fetched rates for {len(data.get('rates', {}))} currencies")
-            return data
-            
-        except requests.exceptions.RequestException as e:
-            logger.error(f"Failed to fetch rates from Frankfurter API: {e}")
-            return None
-        except json.JSONDecodeError as e:
-            logger.error(f"Failed to parse JSON response from Frankfurter API: {e}")
-            return None
+            response = self.rate_cache_table.get_item(
+                Key={'RateSnapshotID': snapshot_id}
+            )
+            exists = 'Item' in response
+            if exists:
+                logger.info(f"Snapshot {snapshot_id} already exists, skipping...")
+            return exists
+        except Exception as e:
+            logger.error(f"Error checking existing snapshot: {e}")
+            return False
+    
+    def fetch_rates_from_frankfurter(self, max_retries: int = 3) -> Optional[Dict[str, Any]]:
+        """
+        Fetch the latest exchange rates from Frankfurter API with retry logic
+        Returns rates with EUR as base currency
+        """
+        for attempt in range(max_retries):
+            try:
+                logger.info(f"Fetching rates from Frankfurter API (attempt {attempt + 1}/{max_retries})...")
+                response = requests.get(self.frankfurter_api_url, timeout=30)
+                response.raise_for_status()
+                
+                data = response.json()
+                logger.info(f"Successfully fetched rates for {len(data.get('rates', {}))} currencies")
+                return data
+                
+            except requests.exceptions.RequestException as e:
+                logger.warning(f"Attempt {attempt + 1} failed: {e}")
+                if attempt < max_retries - 1:
+                    wait_time = 2 ** attempt  # Exponential backoff
+                    logger.info(f"Retrying in {wait_time} seconds...")
+                    time.sleep(wait_time)
+                else:
+                    logger.error(f"All {max_retries} attempts failed to fetch rates from Frankfurter API")
+            except json.JSONDecodeError as e:
+                logger.error(f"Failed to parse JSON response from Frankfurter API: {e}")
+                break  # Don't retry on JSON decode errors
+        
+        return None
     
     def store_rates_in_cache(self, snapshot_id: str, rates_data: Dict[str, Any]) -> bool:
         """
@@ -145,10 +170,15 @@ class RateSyncService:
         # Generate snapshot ID
         snapshot_id = self.generate_snapshot_id()
         
-        # Fetch rates from Frankfurter API
+        # Check if this snapshot already exists (prevent duplicates)
+        if self.check_existing_snapshot(snapshot_id):
+            logger.info("Snapshot already exists, synchronization not needed")
+            return True
+        
+        # Fetch rates from Frankfurter API with retry logic
         rates_data = self.fetch_rates_from_frankfurter()
         if not rates_data:
-            logger.error("Failed to fetch rates from API")
+            logger.error("Failed to fetch rates from API after all retries")
             return False
         
         # Validate rates data
