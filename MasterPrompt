@@ -1,0 +1,90 @@
+Master Project Prompt: RateLock - Audited Currency Conversion API
+Project Goal & Value Proposition
+The primary goal is to build RateLock, a high-speed, auditable currency conversion service.
+
+The service must demonstrate an architecture that solves the financial problem of Audit and Compliance Risk by providing a consistent, fixed hourly exchange rate rather than relying on expensive, volatile real-time market data.
+
+Primary Value: Providing an immutable, auditable record for every conversion, satisfying regulatory requirements for invoicing, payroll, and financial reporting.
+
+I. Technical Architecture & Constraints
+The system must use a decoupled microservice architecture running on AWS.
+
+Backend Services: Two separate microservices must be built and run as Docker containers on AWS ECS Fargate.
+
+Communication Spine: Amazon DynamoDB will be used as the shared state cache and the immutable audit log.
+
+Public Interface: All customer interactions must go through Amazon API Gateway.
+
+Frontend: A single-page application (HTML, JavaScript, CSS) hosted on S3 Static Website Hosting via CloudFront.
+
+Data Source: The Frankfurter API will be used to source free, auditable exchange rates (based on the European Central Bank data).
+
+II. Microservice 1: RateSync (The Asynchronous Worker)
+This is the data ingestion and cache update service.
+
+Technology: Dockerized Python or Go application.
+
+Function:
+
+Trigger: Must be designed to run on a schedule (e.g., hourly, via a simulated AWS EventBridge rule).
+
+Data Fetch: Calls the Frankfurter API to fetch the latest rates (which use EUR as the base currency).
+
+Snapshot Creation: Generates a unique Rate Snapshot ID (e.g., YYYYMMDD-HHMMUTC) for the entire batch of collected rates, stamping them with the exact collection timestamp.
+
+Cache Write: Writes the full rate set and the unique Snapshot ID to the RateCacheTable in DynamoDB. This makes the rates consistent for the next hour.
+
+III. Microservice 2: ConversionEngine (The Synchronous API)
+This is the high-speed, customer-facing service exposed via API Gateway.
+
+Technology: Dockerized Python (using Flask/FastAPI) or Go application.
+
+Core Logic:
+
+Receives requests via API Gateway (e.g., GET /v1/convert?from=USD&to=JPY&amount=100).
+
+Rate Lookup: Reads the most recent Snapshot ID and its rates from the RateCacheTable.
+
+Triangulation: Must perform the conversion, using the Euro-based rates to calculate non-Euro pairs (e.g., calculating USD to JPY requires using EUR as the pivot).
+
+Audit ID Generation: Generates a unique Audit Log Transaction ID for this specific conversion event.
+
+Immutable Write: Writes the full conversion details (original amount, result, and the Rate Snapshot ID used) to the ConversionAuditLogTable (this is the immutable, auditable log).
+
+Required API Endpoints (via API Gateway):
+
+Public (Monetizable): GET /v1/convert
+
+Response: Must include the converted_amount and the two critical audit fields: the rate_snapshot_id used and the audit_log_transaction_id.
+
+Internal (Secure): GET /v1/audit/{transactionId}
+
+Function: Must query the ConversionAuditLogTable using the transaction ID and return the complete, historical audit record, proving the rate used.
+
+IV. Data Model & Auditable Guarantee
+Two distinct DynamoDB tables are mandatory for compliance and cost management:
+
+Table 1: RateCacheTable
+
+Primary Key: RateSnapshotID
+
+Purpose: Stores the actual rates for immediate consumption by Service 2.
+
+Cost Management: Must utilize DynamoDB Time-to-Live (TTL) to automatically delete records older than 30 days, keeping costs low.
+
+Table 2: ConversionAuditLogTable
+
+Primary Key: AuditLogTransactionID
+
+Purpose: Stores the record of the conversion event (what rate was used). This is the immutable legal record.
+
+Retention: Must be designed for long-term storage (7+ years), with older data potentially exported to S3 Glacier.
+
+The Auditable Guarantee: The presence of the RateSnapshotID in the long-term ConversionAuditLogTable permanently links the conversion to the official, time-stamped rate, making it defensible to auditors.
+
+V. Frontend and User Experience
+Technology: Single HTML/JS file (Vanilla or Alpine.js)
+
+Functionality: The JavaScript must call the GET /v1/convert endpoint.
+
+UX Requirement: The result must prominently display the converted amount AND the returned Audit Snapshot ID to visually validate that the auditable record was successfully generated.
