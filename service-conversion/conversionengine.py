@@ -35,7 +35,19 @@ class ConversionEngineService:
     
     def __init__(self):
         """Initialize the ConversionEngine service with AWS clients"""
-        self.dynamodb = boto3.resource('dynamodb')
+        # Configure DynamoDB endpoint for local testing
+        dynamodb_endpoint = os.getenv('DYNAMODB_ENDPOINT')
+        if dynamodb_endpoint:
+            self.dynamodb = boto3.resource(
+                'dynamodb',
+                endpoint_url=dynamodb_endpoint,
+                region_name=os.getenv('AWS_DEFAULT_REGION', 'us-east-1'),
+                aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID', 'dummy'),
+                aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY', 'dummy')
+            )
+        else:
+            self.dynamodb = boto3.resource('dynamodb')
+            
         self.rate_cache_table_name = os.getenv('RATE_CACHE_TABLE', 'RateCacheTable')
         self.audit_log_table_name = os.getenv('AUDIT_LOG_TABLE', 'ConversionAuditLogTable')
         
@@ -44,6 +56,8 @@ class ConversionEngineService:
             self.rate_cache_table = self.dynamodb.Table(self.rate_cache_table_name)
             self.audit_log_table = self.dynamodb.Table(self.audit_log_table_name)
             logger.info(f"Connected to DynamoDB tables: {self.rate_cache_table_name}, {self.audit_log_table_name}")
+            if dynamodb_endpoint:
+                logger.info(f"Using local DynamoDB endpoint: {dynamodb_endpoint}")
         except Exception as e:
             logger.error(f"Failed to connect to DynamoDB tables: {e}")
             raise

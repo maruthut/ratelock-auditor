@@ -1,0 +1,86 @@
+version: '3.8'
+
+services:
+  # Local DynamoDB for testing
+  dynamodb-local:
+    image: amazon/dynamodb-local:latest
+    container_name: ratelock-dynamodb
+    ports:
+      - "8000:8000"
+    command: ["-jar", "DynamoDBLocal.jar", "-sharedDb", "-inMemory"]
+    working_dir: /home/dynamodblocal
+
+  # RateSync Service
+  ratesync:
+    build:
+      context: ./service-ratesync
+      dockerfile: Dockerfile
+    container_name: ratelock-ratesync
+    environment:
+      - AWS_ACCESS_KEY_ID=dummy
+      - AWS_SECRET_ACCESS_KEY=dummy
+      - AWS_DEFAULT_REGION=us-east-1
+      - DYNAMODB_ENDPOINT=http://dynamodb-local:8000
+      - RATE_CACHE_TABLE=RateCacheTable
+      - RUN_MODE=test
+    depends_on:
+      - dynamodb-local
+    volumes:
+      - ./logs:/app/logs
+
+  # ConversionEngine Service
+  conversion-engine:
+    build:
+      context: ./service-conversion
+      dockerfile: Dockerfile
+    container_name: ratelock-conversion
+    ports:
+      - "8080:8080"
+    environment:
+      - AWS_ACCESS_KEY_ID=dummy
+      - AWS_SECRET_ACCESS_KEY=dummy
+      - AWS_DEFAULT_REGION=us-east-1
+      - DYNAMODB_ENDPOINT=http://dynamodb-local:8000
+      - RATE_CACHE_TABLE=RateCacheTable
+      - AUDIT_LOG_TABLE=ConversionAuditLogTable
+      - FLASK_DEBUG=true
+    depends_on:
+      - dynamodb-local
+    volumes:
+      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Frontend served by a simple HTTP server
+  frontend:
+    image: nginx:alpine
+    container_name: ratelock-frontend
+    ports:
+      - "3000:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - conversion-engine
+
+  # DynamoDB Admin UI (optional, for viewing data)
+  dynamodb-admin:
+    image: aaronshaf/dynamodb-admin:latest
+    container_name: ratelock-dynamodb-admin
+    ports:
+      - "8001:8001"
+    environment:
+      - DYNAMO_ENDPOINT=http://dynamodb-local:8000
+    depends_on:
+      - dynamodb-local
+
+volumes:
+  dynamodb_data:
+    driver: local
+
+networks:
+  default:
+    name: ratelock-network

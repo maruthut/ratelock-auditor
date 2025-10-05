@@ -1,0 +1,12 @@
+# Requirements for local testing and development tools
+# Install with: pip install -r dev-requirements.txt
+
+# AWS SDK for DynamoDB setup
+boto3==1.34.144
+botocore==1.34.144
+
+# HTTP requests for testing
+requests==2.31.0
+
+# Development utilities
+python-dateutil==2.8.2

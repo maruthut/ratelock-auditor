@@ -13,6 +13,7 @@ import requests
 import boto3
 from datetime import datetime, timezone
 from typing import Dict, Any, Optional
+from decimal import Decimal
 from botocore.exceptions import ClientError
 
 # Configure logging
@@ -29,7 +30,19 @@ class RateSyncService:
     
     def __init__(self):
         """Initialize the RateSync service with AWS clients"""
-        self.dynamodb = boto3.resource('dynamodb')
+        # Configure DynamoDB endpoint for local testing
+        dynamodb_endpoint = os.getenv('DYNAMODB_ENDPOINT')
+        if dynamodb_endpoint:
+            self.dynamodb = boto3.resource(
+                'dynamodb',
+                endpoint_url=dynamodb_endpoint,
+                region_name=os.getenv('AWS_DEFAULT_REGION', 'us-east-1'),
+                aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID', 'dummy'),
+                aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY', 'dummy')
+            )
+        else:
+            self.dynamodb = boto3.resource('dynamodb')
+            
         self.table_name = os.getenv('RATE_CACHE_TABLE', 'RateCacheTable')
         self.frankfurter_api_url = 'https://api.frankfurter.app/latest'
         
@@ -37,6 +50,8 @@ class RateSyncService:
         try:
             self.rate_cache_table = self.dynamodb.Table(self.table_name)
             logger.info(f"Connected to DynamoDB table: {self.table_name}")
+            if dynamodb_endpoint:
+                logger.info(f"Using local DynamoDB endpoint: {dynamodb_endpoint}")
         except Exception as e:
             logger.error(f"Failed to connect to DynamoDB table: {e}")
             raise
@@ -105,18 +120,23 @@ class RateSyncService:
             # Calculate TTL (30 days from now)
             ttl_timestamp = int(time.time()) + (30 * 24 * 60 * 60)
             
+            # Convert float rates to Decimal for DynamoDB compatibility
+            decimal_rates = {}
+            for currency, rate in rates_data.get('rates', {}).items():
+                decimal_rates[currency] = Decimal(str(rate))
+            
+            # Add EUR to rates with value 1.0 (since it's the base currency)
+            decimal_rates['EUR'] = Decimal('1.0')
+            
             # Prepare the item for DynamoDB
             cache_item = {
                 'RateSnapshotID': snapshot_id,
                 'BaseCurrency': rates_data.get('base', 'EUR'),
                 'FetchDate': rates_data.get('date'),
-                'Rates': rates_data.get('rates', {}),
+                'Rates': decimal_rates,
                 'FetchTimestamp': datetime.now(timezone.utc).isoformat(),
                 'TTL': ttl_timestamp
             }
-            
-            # Add EUR to rates with value 1.0 (since it's the base currency)
-            cache_item['Rates']['EUR'] = 1.0
             
             # Store in DynamoDB
             self.rate_cache_table.put_item(Item=cache_item)

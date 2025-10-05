@@ -277,7 +277,9 @@
 
     <script>
         // Configuration
-        const API_BASE_URL = 'https://your-api-gateway-url.amazonaws.com/v1';
+        const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+            ? 'http://localhost:8080/v1'  // Local development
+            : 'https://your-api-gateway-url.amazonaws.com/v1';  // Production
         
         // DOM Elements
         const form = document.getElementById('conversionForm');
