@@ -9,12 +9,16 @@ import os
 import json
 import time
 import logging
-import requests
-import boto3
+import asyncio
 from datetime import datetime, timezone
 from typing import Dict, Any, Optional
 from decimal import Decimal
+import boto3
+import httpx
 from botocore.exceptions import ClientError
+from fastapi import FastAPI, HTTPException, BackgroundTasks
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 
 # Configure logging
 logging.basicConfig(
@@ -22,6 +26,19 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
+
+# Pydantic Models for FastAPI
+class HealthResponse(BaseModel):
+    status: str
+    service: str
+    timestamp: str
+    last_sync: Optional[str] = None
+
+class SyncResponse(BaseModel):
+    status: str
+    snapshot_id: str
+    currencies_updated: int
+    timestamp: str
 
 class RateSyncService:
     """
@@ -83,7 +100,7 @@ class RateSyncService:
             logger.error(f"Error checking existing snapshot: {e}")
             return False
     
-    def fetch_rates_from_frankfurter(self, max_retries: int = 3) -> Optional[Dict[str, Any]]:
+    async def fetch_rates_from_frankfurter(self, max_retries: int = 3) -> Optional[Dict[str, Any]]:
         """
         Fetch the latest exchange rates from Frankfurter API with retry logic
         Returns rates with EUR as base currency
@@ -91,24 +108,31 @@ class RateSyncService:
         for attempt in range(max_retries):
             try:
                 logger.info(f"Fetching rates from Frankfurter API (attempt {attempt + 1}/{max_retries})...")
-                response = requests.get(self.frankfurter_api_url, timeout=30)
-                response.raise_for_status()
                 
-                data = response.json()
-                logger.info(f"Successfully fetched rates for {len(data.get('rates', {}))} currencies")
-                return data
+                async with httpx.AsyncClient(timeout=30.0) as client:
+                    response = await client.get(self.frankfurter_api_url)
+                    response.raise_for_status()
+                    
+                    data = response.json()
+                    logger.info(f"Successfully fetched rates for {len(data.get('rates', {}))} currencies")
+                    return data
                 
-            except requests.exceptions.RequestException as e:
+            except httpx.TimeoutException:
+                logger.warning(f"Attempt {attempt + 1} timed out")
+            except httpx.HTTPError as e:
                 logger.warning(f"Attempt {attempt + 1} failed: {e}")
-                if attempt < max_retries - 1:
-                    wait_time = 2 ** attempt  # Exponential backoff
-                    logger.info(f"Retrying in {wait_time} seconds...")
-                    time.sleep(wait_time)
-                else:
-                    logger.error(f"All {max_retries} attempts failed to fetch rates from Frankfurter API")
             except json.JSONDecodeError as e:
                 logger.error(f"Failed to parse JSON response from Frankfurter API: {e}")
                 break  # Don't retry on JSON decode errors
+            except Exception as e:
+                logger.error(f"Unexpected error on attempt {attempt + 1}: {e}")
+                
+            if attempt < max_retries - 1:
+                wait_time = 2 ** attempt  # Exponential backoff
+                logger.info(f"Retrying in {wait_time} seconds...")
+                await asyncio.sleep(wait_time)
+            else:
+                logger.error(f"All {max_retries} attempts failed to fetch rates from Frankfurter API")
         
         return None
     
@@ -181,7 +205,7 @@ class RateSyncService:
         logger.info("Rates data validation passed")
         return True
     
-    def sync_rates(self) -> bool:
+    async def sync_rates(self) -> bool:
         """
         Main method to sync rates - fetch from API and store in cache
         """
@@ -196,7 +220,7 @@ class RateSyncService:
             return True
         
         # Fetch rates from Frankfurter API with retry logic
-        rates_data = self.fetch_rates_from_frankfurter()
+        rates_data = await self.fetch_rates_from_frankfurter()
         if not rates_data:
             logger.error("Failed to fetch rates from API after all retries")
             return False
@@ -277,6 +301,119 @@ def lambda_handler(event, context):
             })
         }
 
+# Initialize the service
+rate_sync_service = RateSyncService()
+
+# Create FastAPI app
+app = FastAPI(
+    title="RateLock RateSync",
+    description="Asynchronous worker for fetching and caching exchange rates",
+    version="2.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc"
+)
+
+@app.get("/health", response_model=HealthResponse)
+async def health_check():
+    """Health check endpoint for load balancer"""
+    # Get the latest snapshot to check service status
+    try:
+        latest = rate_sync_service.get_latest_snapshot()
+        last_sync = latest.get('CollectionTimestamp') if latest else None
+    except Exception:
+        last_sync = None
+    
+    return HealthResponse(
+        status="healthy",
+        service="RateSync",
+        timestamp=datetime.now(timezone.utc).isoformat(),
+        last_sync=last_sync
+    )
+
+@app.post("/sync", response_model=SyncResponse)
+async def trigger_sync():
+    """
+    Manually trigger rate synchronization
+    Typically called by AWS EventBridge on schedule
+    """
+    try:
+        logger.info("Manual sync triggered via API")
+        
+        # Generate snapshot ID for this sync
+        snapshot_id = rate_sync_service.generate_snapshot_id()
+        
+        # Perform the sync
+        success = await rate_sync_service.sync_rates()
+        
+        if success:
+            # Get the latest snapshot to return details
+            latest = rate_sync_service.get_latest_snapshot()
+            if latest and latest.get('RateSnapshotID') == snapshot_id:
+                return SyncResponse(
+                    status="success",
+                    snapshot_id=snapshot_id,
+                    currencies_updated=len(latest.get('Rates', {})),
+                    timestamp=latest.get('CollectionTimestamp', datetime.now(timezone.utc).isoformat())
+                )
+            else:
+                # Fallback if we can't get the exact snapshot
+                return SyncResponse(
+                    status="success",
+                    snapshot_id=snapshot_id,
+                    currencies_updated=0,
+                    timestamp=datetime.now(timezone.utc).isoformat()
+                )
+        else:
+            raise HTTPException(
+                status_code=500,
+                detail="Rate synchronization failed"
+            )
+            
+    except Exception as e:
+        logger.error(f"Sync endpoint error: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Sync failed: {str(e)}"
+        )
+
+@app.on_event("startup")
+async def startup_event():
+    """Perform initial rate sync on startup"""
+    logger.info("RateSync service starting up")
+    
+    # Perform initial sync in background
+    try:
+        await rate_sync_service.sync_rates()
+        logger.info("Initial rate sync completed successfully")
+    except Exception as e:
+        logger.error(f"Initial rate sync failed: {e}")
+
+# Background task for periodic sync (for container mode)
+async def periodic_sync():
+    """Background task to sync rates every hour"""
+    while True:
+        try:
+            # Wait 1 hour (3600 seconds)
+            await asyncio.sleep(3600)
+            
+            logger.info("Starting scheduled rate synchronization")
+            success = await rate_sync_service.sync_rates()
+            
+            if success:
+                logger.info("Scheduled sync completed successfully")
+            else:
+                logger.error("Scheduled sync failed")
+                
+        except Exception as e:
+            logger.error(f"Periodic sync error: {e}")
+
+@app.on_event("startup")
+async def start_background_tasks():
+    """Start background tasks"""
+    if os.getenv('RUN_MODE') == 'container':
+        logger.info("Starting periodic rate synchronization (every 1 hour)")
+        asyncio.create_task(periodic_sync())
+
 def main():
     """
     Main function for local testing and Docker container execution
@@ -284,45 +421,30 @@ def main():
     logger.info("RateSync Service starting...")
     
     try:
-        # Initialize the service
-        rate_sync = RateSyncService()
-        
-        # For container deployment, run in a loop (simulating scheduled execution)
-        if os.getenv('RUN_MODE') == 'container':
-            logger.info("Running in container mode - will sync rates every hour")
-            while True:
-                try:
-                    success = rate_sync.sync_rates()
-                    if success:
-                        logger.info("Rate sync completed successfully, sleeping for 1 hour...")
-                    else:
-                        logger.error("Rate sync failed, will retry in 1 hour...")
-                    
-                    # Sleep for 1 hour (3600 seconds)
-                    time.sleep(3600)
-                    
-                except KeyboardInterrupt:
-                    logger.info("Received interrupt signal, shutting down...")
-                    break
-                except Exception as e:
-                    logger.error(f"Error in sync loop: {e}")
-                    logger.info("Retrying in 1 hour...")
-                    time.sleep(3600)
-        else:
-            # One-time execution for testing
+        # For local testing, run the sync once
+        if os.getenv('RUN_MODE') != 'container' and os.getenv('RUN_MODE') != 'server':
             logger.info("Running in test mode - single execution")
-            success = rate_sync.sync_rates()
+            import asyncio
             
-            if success:
-                logger.info("Rate synchronization completed successfully")
-                
-                # Optionally display the latest snapshot for verification
-                latest = rate_sync.get_latest_snapshot()
-                if latest:
-                    logger.info(f"Latest snapshot contains {len(latest.get('Rates', {}))} currencies")
-            else:
-                logger.error("Rate synchronization failed")
-                exit(1)
+            async def test_sync():
+                success = await rate_sync_service.sync_rates()
+                if success:
+                    logger.info("Rate synchronization completed successfully")
+                    # Optionally display the latest snapshot for verification
+                    latest = rate_sync_service.get_latest_snapshot()
+                    if latest:
+                        logger.info(f"Latest snapshot contains {len(latest.get('Rates', {}))} currencies")
+                else:
+                    logger.error("Rate synchronization failed")
+                    exit(1)
+            
+            asyncio.run(test_sync())
+        else:
+            # Run as FastAPI server
+            import uvicorn
+            port = int(os.getenv('PORT', 8081))
+            logger.info(f"Starting RateSync service on port {port}")
+            uvicorn.run(app, host="0.0.0.0", port=port)
     
     except Exception as e:
         logger.error(f"Service execution failed: {e}")

@@ -1,33 +1,28 @@
-# ConversionEngine Service Requirements
+# ConversionEngine Service Requirements - FastAPI Implementation
 
 # AWS SDK for Python
 boto3==1.34.144
 botocore==1.34.144
 
-# Web framework
-flask==2.3.3
-flask-cors==4.0.0
+# FastAPI and ASGI server
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
 
-# WSGI server for production
-gunicorn==21.2.0
+# Data validation and serialization
+pydantic==2.5.0
 
 # HTTP client (for health checks and testing)
 requests==2.31.0
 
-# High-precision decimal arithmetic (already in stdlib, but explicit for clarity)
-# decimal is part of Python standard library
-
 # Date/time utilities
 python-dateutil==2.8.2
 
-# Logging enhancements (optional)
+# Logging enhancements
 structlog==23.1.0
-
-# Input validation (optional, for enhanced parameter validation)
-marshmallow==3.20.1
 
 # Testing dependencies (for development)
 pytest==7.4.0
-pytest-flask==1.2.0
+pytest-asyncio==0.21.1
+httpx==0.25.2
 pytest-mock==3.11.1
 moto==4.2.2

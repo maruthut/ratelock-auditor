@@ -12,8 +12,10 @@ import logging
 from decimal import Decimal, ROUND_HALF_UP, InvalidOperation
 from datetime import datetime, timezone
 from typing import Dict, Any, Optional, Tuple
-from flask import Flask, request, jsonify, make_response
-from flask_cors import CORS
+from fastapi import FastAPI, Query, HTTPException, status
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 import boto3
 from botocore.exceptions import ClientError
 
@@ -24,9 +26,32 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Flask app initialization
-app = Flask(__name__)
-CORS(app)  # Enable CORS for frontend access
+# Pydantic Models for FastAPI
+class ConversionResponse(BaseModel):
+    from_currency: str
+    to_currency: str
+    original_amount: float
+    converted_amount: float
+    rate_snapshot_id: str
+    audit_log_transaction_id: str
+    conversion_timestamp: str
+
+class HealthResponse(BaseModel):
+    status: str
+    service: str
+    timestamp: str
+
+class AuditRecord(BaseModel):
+    AuditLogTransactionID: str
+    FromCurrency: str
+    ToCurrency: str
+    OriginalAmount: str
+    ConvertedAmount: str
+    RateSnapshotID: str
+    ConversionTimestamp: str
+    CalculationMethod: str
+    RatesUsed: Dict[str, float]
+    ServiceVersion: str
 
 class ConversionEngineService:
     """
@@ -312,32 +337,50 @@ class ConversionEngineService:
 # Initialize the service
 conversion_service = ConversionEngineService()
 
-@app.route('/health', methods=['GET'])
-def health_check():
-    """Health check endpoint"""
-    return jsonify({
-        'status': 'healthy',
-        'service': 'ConversionEngine',
-        'timestamp': datetime.now(timezone.utc).isoformat()
-    }), 200
+# Create FastAPI app
+app = FastAPI(
+    title="RateLock ConversionEngine",
+    description="High-speed, auditable currency conversion microservice",
+    version="2.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc"
+)
 
-@app.route('/v1/convert', methods=['GET'])
-def convert_currency():
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Configure appropriately for production
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
+    allow_headers=["*"],
+)
+
+@app.get("/health", response_model=HealthResponse)
+async def health_check():
+    """Health check endpoint"""
+    return HealthResponse(
+        status="healthy",
+        service="ConversionEngine",
+        timestamp=datetime.now(timezone.utc).isoformat()
+    )
+
+@app.get("/v1/convert", response_model=ConversionResponse)
+async def convert_currency(
+    from_currency: str = Query(..., alias="from", min_length=3, max_length=3, description="Source currency code"),
+    to_currency: str = Query(..., alias="to", min_length=3, max_length=3, description="Target currency code"),
+    amount: str = Query(..., description="Amount to convert")
+):
     """
     Public API endpoint for currency conversion
     Expected parameters: from, to, amount
     """
     try:
-        # Get query parameters
-        from_currency = request.args.get('from')
-        to_currency = request.args.get('to')
-        amount = request.args.get('amount')
-        
         # Validate required parameters
         if not all([from_currency, to_currency, amount]):
-            return jsonify({
-                'error': 'Missing required parameters: from, to, amount'
-            }), 400
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Missing required parameters: from, to, amount"
+            )
         
         # Perform conversion
         result = conversion_service.perform_conversion(from_currency, to_currency, amount)
@@ -346,47 +389,55 @@ def convert_currency():
         
         if status_code == 200:
             logger.info(f"Successful conversion: {amount} {from_currency} -> {to_currency}")
+            return ConversionResponse(**result)
         else:
             logger.warning(f"Conversion failed: {result.get('error')}")
+            raise HTTPException(status_code=status_code, detail=result.get('error', 'Conversion failed'))
         
-        return jsonify(result), status_code
-        
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"API error in convert endpoint: {e}")
-        return jsonify({
-            'error': 'Internal server error'
-        }), 500
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal server error"
+        )
 
-@app.route('/v1/audit/<transaction_id>', methods=['GET'])
-def get_audit_record(transaction_id):
+@app.get("/v1/audit/{transaction_id}", response_model=AuditRecord)
+async def get_audit_record(transaction_id: str):
     """
     Internal API endpoint for retrieving audit records
     """
     try:
         if not transaction_id:
-            return jsonify({
-                'error': 'Transaction ID is required'
-            }), 400
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Transaction ID is required"
+            )
         
         # Retrieve audit record
         audit_record = conversion_service.get_audit_record(transaction_id)
         
         if not audit_record:
-            return jsonify({
-                'error': 'Audit record not found'
-            }), 404
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Audit record not found"
+            )
         
         logger.info(f"Retrieved audit record for transaction: {transaction_id}")
-        return jsonify(audit_record), 200
+        return AuditRecord(**audit_record)
         
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"API error in audit endpoint: {e}")
-        return jsonify({
-            'error': 'Internal server error'
-        }), 500
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal server error"
+        )
 
-@app.route('/v1/rates', methods=['GET'])
-def get_current_rates():
+@app.get("/v1/rates")
+async def get_current_rates():
     """
     Internal endpoint to get current rate snapshot (for debugging/monitoring)
     """
@@ -394,38 +445,45 @@ def get_current_rates():
         snapshot = conversion_service.get_latest_rate_snapshot()
         
         if not snapshot:
-            return jsonify({
-                'error': 'No rate snapshot available'
-            }), 503
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="No rate snapshot available"
+            )
         
-        return jsonify({
+        return {
             'rate_snapshot_id': snapshot.get('RateSnapshotID'),
             'base_currency': snapshot.get('BaseCurrency'),
             'fetch_date': snapshot.get('FetchDate'),
             'rates_count': len(snapshot.get('Rates', {})),
             'fetch_timestamp': snapshot.get('FetchTimestamp')
-        }), 200
+        }
         
+    except HTTPException:
+        raise
     except Exception as e:
         logger.error(f"API error in rates endpoint: {e}")
-        return jsonify({
-            'error': 'Internal server error'
-        }), 500
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal server error"
+        )
 
-@app.errorhandler(404)
-def not_found(error):
+# Exception handlers for FastAPI
+@app.exception_handler(404)
+async def not_found_handler(request, exc):
     """Handle 404 errors"""
-    return jsonify({
-        'error': 'Endpoint not found'
-    }), 404
+    return JSONResponse(
+        status_code=404,
+        content={"error": "Endpoint not found"}
+    )
 
-@app.errorhandler(500)
-def internal_error(error):
+@app.exception_handler(500)
+async def internal_error_handler(request, exc):
     """Handle 500 errors"""
-    logger.error(f"Internal server error: {error}")
-    return jsonify({
-        'error': 'Internal server error'
-    }), 500
+    logger.error(f"Internal server error: {exc}")
+    return JSONResponse(
+        status_code=500,
+        content={"error": "Internal server error"}
+    )
 
 def lambda_handler(event, context):
     """
@@ -494,8 +552,8 @@ def lambda_handler(event, context):
 
 if __name__ == '__main__':
     # For local development and container deployment
+    import uvicorn
     port = int(os.getenv('PORT', 8080))
-    debug = os.getenv('FLASK_DEBUG', 'False').lower() == 'true'
     
     logger.info(f"Starting ConversionEngine service on port {port}")
-    app.run(host='0.0.0.0', port=port, debug=debug)
+    uvicorn.run(app, host="0.0.0.0", port=port)

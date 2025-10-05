@@ -7,7 +7,6 @@ WORKDIR /app
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
-ENV FLASK_APP=conversionengine.py
 ENV PORT=8080
 
 # Install system dependencies
@@ -38,13 +37,10 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
 # Expose the port the app runs on
 EXPOSE 8080
 
-# Set default command
-CMD ["python", "conversionengine.py"]
-
-# Alternative command for production with Gunicorn
-# CMD ["gunicorn", "--bind", "0.0.0.0:8080", "--workers", "4", "--timeout", "30", "conversionengine:app"]
+# Run with uvicorn ASGI server
+CMD ["uvicorn", "conversionengine:app", "--host", "0.0.0.0", "--port", "8080", "--workers", "1"]
 
 # Labels for metadata
 LABEL maintainer="RateLock Team"
-LABEL description="ConversionEngine Service - High-speed currency conversion API"
-LABEL version="1.0.0"
+LABEL description="ConversionEngine Service - High-speed currency conversion API with FastAPI"
+LABEL version="2.0.0"
