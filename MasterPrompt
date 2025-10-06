@@ -37,7 +37,7 @@ Cache Write: Writes the full rate set and the unique Snapshot ID to the RateCach
 III. Microservice 2: ConversionEngine (The Synchronous API)
 This is the high-speed, customer-facing service exposed via API Gateway.
 
-Technology: Dockerized Python (using Flask/FastAPI) or Go application.
+Technology: Dockerized Python (using FastAPI for modern async performance) or Go application.
 
 Core Logic:
 

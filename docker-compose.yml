@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # Local DynamoDB for testing
   dynamodb-local:
@@ -43,7 +41,7 @@ services:
       - DYNAMODB_ENDPOINT=http://dynamodb-local:8000
       - RATE_CACHE_TABLE=RateCacheTable
       - AUDIT_LOG_TABLE=ConversionAuditLogTable
-      - FLASK_DEBUG=true
+      - ENVIRONMENT=development
     depends_on:
       - dynamodb-local
     volumes:

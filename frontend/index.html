@@ -276,10 +276,10 @@
     </div>
 
     <script>
-        // Configuration
+        // Configuration - Environment Detection
         const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
             ? 'http://localhost:8080/v1'  // Local development
-            : 'https://your-api-gateway-url.amazonaws.com/v1';  // Production
+            : '{{API_BASE_URL}}/v1';  // AWS production (replaced by CDK deployment)
         
         // DOM Elements
         const form = document.getElementById('conversionForm');
