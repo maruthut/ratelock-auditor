@@ -376,18 +376,6 @@ async def trigger_sync():
             detail=f"Sync failed: {str(e)}"
         )
 
-@app.on_event("startup")
-async def startup_event():
-    """Perform initial rate sync on startup"""
-    logger.info("RateSync service starting up")
-    
-    # Perform initial sync in background
-    try:
-        await rate_sync_service.sync_rates()
-        logger.info("Initial rate sync completed successfully")
-    except Exception as e:
-        logger.error(f"Initial rate sync failed: {e}")
-
 # Background task for periodic sync (for container mode)
 async def periodic_sync():
     """Background task to sync rates every hour"""
@@ -408,11 +396,47 @@ async def periodic_sync():
             logger.error(f"Periodic sync error: {e}")
 
 @app.on_event("startup")
-async def start_background_tasks():
-    """Start background tasks"""
+async def startup_event():
+    """Perform initial rate sync on startup with retry logic and start background tasks"""
+    logger.info("RateSync service starting up")
+    
+    # Start background tasks if in container mode
     if os.getenv('RUN_MODE') == 'container':
         logger.info("Starting periodic rate synchronization (every 1 hour)")
         asyncio.create_task(periodic_sync())
+    
+    # Perform initial sync with retry logic
+    logger.info("Starting initial rate synchronization process...")
+    
+    max_retries = 10
+    retry_delay = 30  # 30 seconds between retries
+    
+    for attempt in range(1, max_retries + 1):
+        try:
+            logger.info(f"Initial sync attempt {attempt}/{max_retries}")
+            success = await rate_sync_service.sync_rates()
+            
+            if success:
+                logger.info("Initial rate sync completed successfully")
+                return  # Exit successfully
+            else:
+                logger.warning(f"Initial sync attempt {attempt} returned failure")
+                if attempt == max_retries:
+                    logger.error("All initial sync attempts failed - service will rely on manual sync or periodic schedule")
+                    return  # Exit after max retries
+                else:
+                    logger.info(f"Retrying in {retry_delay} seconds...")
+                    await asyncio.sleep(retry_delay)
+            
+        except Exception as e:
+            logger.warning(f"Initial sync attempt {attempt} failed with exception: {e}")
+            
+            if attempt == max_retries:
+                logger.error("All initial sync attempts failed - service will rely on manual sync or periodic schedule")
+                return  # Exit after max retries
+            else:
+                logger.info(f"Retrying in {retry_delay} seconds...")
+                await asyncio.sleep(retry_delay)
 
 def main():
     """

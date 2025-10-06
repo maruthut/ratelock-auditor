@@ -61,6 +61,10 @@ if ($attempt -gt $maxAttempts) {
 python setup_local_db.py
 
 Write-Host ""
+Write-Host "Waiting for services to initialize and sync rates..." -ForegroundColor Yellow
+Start-Sleep -Seconds 30
+
+Write-Host ""
 Write-Host "Running initial tests..." -ForegroundColor Yellow
 python test_local.py
 
