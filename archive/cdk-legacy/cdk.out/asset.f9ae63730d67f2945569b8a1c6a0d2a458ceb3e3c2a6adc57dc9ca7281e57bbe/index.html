@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RateLock - Auditable Currency Conversion</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #333;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .currency-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .convert-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .convert-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .convert-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 15px;
+            color: white;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-amount {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .audit-info {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .audit-info h4 {
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .audit-field {
+            margin-bottom: 8px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.85rem;
+            word-break: break-all;
+        }
+
+        .error {
+            background: #ff6b6b;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>RateLock</h1>
+            <p>Auditable Currency Conversion</p>
+        </div>
+
+        <form id="conversionForm">
+            <div class="form-group">
+                <label for="amount">Amount</label>
+                <input type="number" id="amount" step="0.01" min="0" placeholder="Enter amount to convert" required>
+            </div>
+
+            <div class="currency-row">
+                <div class="form-group">
+                    <label for="fromCurrency">From</label>
+                    <select id="fromCurrency" required>
+                        <option value="">Select currency</option>
+                        <option value="USD">USD - US Dollar</option>
+                        <option value="EUR">EUR - Euro</option>
+                        <option value="GBP">GBP - British Pound</option>
+                        <option value="JPY">JPY - Japanese Yen</option>
+                        <option value="CAD">CAD - Canadian Dollar</option>
+                        <option value="AUD">AUD - Australian Dollar</option>
+                        <option value="CHF">CHF - Swiss Franc</option>
+                        <option value="CNY">CNY - Chinese Yuan</option>
+                        <option value="INR">INR - Indian Rupee</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="toCurrency">To</label>
+                    <select id="toCurrency" required>
+                        <option value="">Select currency</option>
+                        <option value="USD">USD - US Dollar</option>
+                        <option value="EUR">EUR - Euro</option>
+                        <option value="GBP">GBP - British Pound</option>
+                        <option value="JPY">JPY - Japanese Yen</option>
+                        <option value="CAD">CAD - Canadian Dollar</option>
+                        <option value="AUD">AUD - Australian Dollar</option>
+                        <option value="CHF">CHF - Swiss Franc</option>
+                        <option value="CNY">CNY - Chinese Yuan</option>
+                        <option value="INR">INR - Indian Rupee</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" class="convert-btn" id="convertBtn">Convert Currency</button>
+        </form>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Processing conversion...</p>
+        </div>
+
+        <div class="result" id="result">
+            <div class="result-amount" id="resultAmount"></div>
+            <div class="audit-info">
+                <h4>🔒 Audit Trail Information</h4>
+                <div class="audit-field">
+                    <strong>Rate Snapshot ID:</strong> <span id="rateSnapshotId"></span>
+                </div>
+                <div class="audit-field">
+                    <strong>Transaction ID:</strong> <span id="transactionId"></span>
+                </div>
+                <div class="audit-field">
+                    <strong>Timestamp:</strong> <span id="timestamp"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="error" id="error">
+            <p id="errorMessage"></p>
+        </div>
+    </div>
+
+    <script>
+        // Configuration - Environment Detection
+        const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+            ? 'http://localhost:8080/v1'  // Local development
+            : '{{API_BASE_URL}}/v1';  // AWS production (replaced by CDK deployment)
+        
+        // DOM Elements
+        const form = document.getElementById('conversionForm');
+        const convertBtn = document.getElementById('convertBtn');
+        const loading = document.getElementById('loading');
+        const result = document.getElementById('result');
+        const error = document.getElementById('error');
+
+        // Form submission handler
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await performConversion();
+        });
+
+        async function performConversion() {
+            // Get form values
+            const amount = parseFloat(document.getElementById('amount').value);
+            const fromCurrency = document.getElementById('fromCurrency').value;
+            const toCurrency = document.getElementById('toCurrency').value;
+
+            // Validate inputs
+            if (!amount || amount <= 0) {
+                showError('Please enter a valid amount greater than 0');
+                return;
+            }
+
+            if (!fromCurrency || !toCurrency) {
+                showError('Please select both currencies');
+                return;
+            }
+
+            if (fromCurrency === toCurrency) {
+                showError('From and To currencies must be different');
+                return;
+            }
+
+            // Additional validation for reasonable amounts
+            if (amount > 1000000000) {
+                showError('Amount is too large for conversion');
+                return;
+            }
+
+            // Show loading state
+            showLoading(true);
+            hideError();
+            hideResult();
+
+            try {
+                // Call the conversion API with proper error handling
+                const response = await fetch(
+                    `${API_BASE_URL}/convert?from=${encodeURIComponent(fromCurrency)}&to=${encodeURIComponent(toCurrency)}&amount=${encodeURIComponent(amount)}`,
+                    {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    }
+                );
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                // Validate response data
+                if (!data.converted_amount && data.converted_amount !== 0) {
+                    throw new Error('Invalid response: missing converted amount');
+                }
+                
+                // Display results
+                displayResult(data, amount, fromCurrency, toCurrency);
+                
+            } catch (err) {
+                console.error('Conversion error:', err);
+                showError(`Conversion failed: ${err.message}`);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function displayResult(data, originalAmount, fromCurrency, toCurrency) {
+            // Update result display
+            document.getElementById('resultAmount').textContent = 
+                `${formatCurrency(data.converted_amount, toCurrency)} ${toCurrency}`;
+            
+            // Update audit information
+            document.getElementById('rateSnapshotId').textContent = data.rate_snapshot_id || 'N/A';
+            document.getElementById('transactionId').textContent = data.audit_log_transaction_id || 'N/A';
+            document.getElementById('timestamp').textContent = new Date().toISOString();
+
+            // Show result
+            result.classList.add('show');
+        }
+
+        function formatCurrency(amount, currency) {
+            return new Intl.NumberFormat('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(amount);
+        }
+
+        function showLoading(show) {
+            if (show) {
+                loading.classList.add('show');
+                convertBtn.disabled = true;
+                convertBtn.textContent = 'Converting...';
+            } else {
+                loading.classList.remove('show');
+                convertBtn.disabled = false;
+                convertBtn.textContent = 'Convert Currency';
+            }
+        }
+
+        function showError(message) {
+            document.getElementById('errorMessage').textContent = message;
+            error.classList.add('show');
+        }
+
+        function hideError() {
+            error.classList.remove('show');
+        }
+
+        function hideResult() {
+            result.classList.remove('show');
+        }
+
+        // Development mode - use mock data if API_BASE_URL is not configured
+        if (API_BASE_URL.includes('your-api-gateway-url')) {
+            console.warn('API_BASE_URL not configured - using mock data for development');
+            
+            // Override the performConversion function for development
+            window.originalPerformConversion = performConversion;
+            
+            window.performConversion = async function() {
+                const amount = parseFloat(document.getElementById('amount').value);
+                const fromCurrency = document.getElementById('fromCurrency').value;
+                const toCurrency = document.getElementById('toCurrency').value;
+
+                if (!amount || !fromCurrency || !toCurrency) {
+                    showError('Please fill in all fields');
+                    return;
+                }
+
+                showLoading(true);
+                hideError();
+                hideResult();
+
+                // Simulate API delay
+                await new Promise(resolve => setTimeout(resolve, 1500));
+
+                // Mock conversion data
+                const mockData = {
+                    converted_amount: (amount * 1.23456).toFixed(2),
+                    rate_snapshot_id: `20251004-${new Date().getHours().toString().padStart(2, '0')}00UTC`,
+                    audit_log_transaction_id: `audit-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+                };
+
+                displayResult(mockData, amount, fromCurrency, toCurrency);
+                showLoading(false);
+            };
+        }
+    </script>
+</body>
+</html>

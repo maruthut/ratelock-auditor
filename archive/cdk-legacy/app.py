@@ -16,10 +16,21 @@ app = cdk.App()
 environment = app.node.try_get_context("environment") or "dev"
 region = app.node.try_get_context("region") or "us-east-1"
 
-# CDK Environment
+# CDK Environment - explicitly set account for VPC lookups
+import boto3
+import os
+
+# Get account ID from AWS credentials
+try:
+    sts_client = boto3.client('sts')
+    account_id = sts_client.get_caller_identity()['Account']
+except Exception:
+    # Fallback to environment variable if available
+    account_id = os.environ.get('CDK_DEFAULT_ACCOUNT')
+
 env = cdk.Environment(
-    region=region,
-    # account will be auto-detected from CLI
+    account=account_id,
+    region=region
 )
 
 # Stack naming convention

@@ -8,7 +8,8 @@ from aws_cdk import (
     aws_apigateway as apigateway,
     aws_logs as logs,
     Duration,
-    CfnOutput
+    CfnOutput,
+    Fn
 )
 from constructs import Construct
 from .compute_stack import ComputeStack
@@ -21,8 +22,8 @@ class ApiStack(Stack):
                  compute_stack: ComputeStack, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
-        # Reference ALB from compute stack
-        self.alb = compute_stack.alb
+        # Import ALB DNS name from compute stack
+        self.alb_dns = Fn.import_value(f"{compute_stack.stack_name}-LoadBalancerDNS")
 
         # Create API Gateway access logs
         self.api_logs = logs.LogGroup(
@@ -63,7 +64,7 @@ class ApiStack(Stack):
 
         # Create HTTP integration with ALB
         self.alb_integration = apigateway.HttpIntegration(
-            f"http://{self.alb.load_balancer_dns_name}/{{proxy}}",
+            f"http://{self.alb_dns}/{{proxy}}",
             http_method="ANY",
             options=apigateway.IntegrationOptions(
                 request_parameters={
@@ -79,7 +80,7 @@ class ApiStack(Stack):
         health_resource.add_method(
             "GET",
             apigateway.HttpIntegration(
-                f"http://{self.alb.load_balancer_dns_name}/health",
+                f"http://{self.alb_dns}/health",
                 http_method="GET"
             ),
             method_responses=[
@@ -100,7 +101,7 @@ class ApiStack(Stack):
         convert_resource.add_method(
             "GET",
             apigateway.HttpIntegration(
-                f"http://{self.alb.load_balancer_dns_name}/v1/convert",
+                f"http://{self.alb_dns}/v1/convert",
                 http_method="GET",
                 options=apigateway.IntegrationOptions(
                     request_parameters={
@@ -133,7 +134,7 @@ class ApiStack(Stack):
         audit_id_resource.add_method(
             "GET",
             apigateway.HttpIntegration(
-                f"http://{self.alb.load_balancer_dns_name}/v1/audit/{{transaction_id}}",
+                f"http://{self.alb_dns}/v1/audit/{{transaction_id}}",
                 http_method="GET",
                 options=apigateway.IntegrationOptions(
                     request_parameters={
@@ -160,7 +161,7 @@ class ApiStack(Stack):
         rates_resource.add_method(
             "GET",
             apigateway.HttpIntegration(
-                f"http://{self.alb.load_balancer_dns_name}/v1/rates",
+                f"http://{self.alb_dns}/v1/rates",
                 http_method="GET"
             ),
             method_responses=[

@@ -1,0 +1,3595 @@
+{
+  "version": "tree-0.1",
+  "tree": {
+    "id": "App",
+    "path": "",
+    "children": {
+      "RateLock-Dev-Database": {
+        "id": "RateLock-Dev-Database",
+        "path": "RateLock-Dev-Database",
+        "children": {
+          "RateCacheTable": {
+            "id": "RateCacheTable",
+            "path": "RateLock-Dev-Database/RateCacheTable",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "RateLock-Dev-Database/RateCacheTable/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::DynamoDB::Table",
+                  "aws:cdk:cloudformation:props": {
+                    "attributeDefinitions": [
+                      {
+                        "attributeName": "RateSnapshotID",
+                        "attributeType": "S"
+                      }
+                    ],
+                    "billingMode": "PAY_PER_REQUEST",
+                    "keySchema": [
+                      {
+                        "attributeName": "RateSnapshotID",
+                        "keyType": "HASH"
+                      }
+                    ],
+                    "pointInTimeRecoverySpecification": {
+                      "pointInTimeRecoveryEnabled": false
+                    },
+                    "tableName": "RateCacheTable",
+                    "tags": [
+                      {
+                        "key": "Environment",
+                        "value": "dev"
+                      },
+                      {
+                        "key": "ManagedBy",
+                        "value": "CDK"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "RateLock"
+                      }
+                    ],
+                    "timeToLiveSpecification": {
+                      "attributeName": "ttl",
+                      "enabled": true
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_dynamodb.CfnTable",
+                  "version": "2.110.1"
+                }
+              },
+              "ScalingRole": {
+                "id": "ScalingRole",
+                "path": "RateLock-Dev-Database/RateCacheTable/ScalingRole",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.110.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_dynamodb.Table",
+              "version": "2.110.1"
+            }
+          },
+          "ConversionAuditLogTable": {
+            "id": "ConversionAuditLogTable",
+            "path": "RateLock-Dev-Database/ConversionAuditLogTable",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "RateLock-Dev-Database/ConversionAuditLogTable/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::DynamoDB::Table",
+                  "aws:cdk:cloudformation:props": {
+                    "attributeDefinitions": [
+                      {
+                        "attributeName": "AuditLogTransactionID",
+                        "attributeType": "S"
+                      }
+                    ],
+                    "billingMode": "PAY_PER_REQUEST",
+                    "keySchema": [
+                      {
+                        "attributeName": "AuditLogTransactionID",
+                        "keyType": "HASH"
+                      }
+                    ],
+                    "pointInTimeRecoverySpecification": {
+                      "pointInTimeRecoveryEnabled": false
+                    },
+                    "tableName": "ConversionAuditLogTable",
+                    "tags": [
+                      {
+                        "key": "Environment",
+                        "value": "dev"
+                      },
+                      {
+                        "key": "ManagedBy",
+                        "value": "CDK"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "RateLock"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_dynamodb.CfnTable",
+                  "version": "2.110.1"
+                }
+              },
+              "ScalingRole": {
+                "id": "ScalingRole",
+                "path": "RateLock-Dev-Database/ConversionAuditLogTable/ScalingRole",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.110.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_dynamodb.Table",
+              "version": "2.110.1"
+            }
+          },
+          "RateCacheTableName": {
+            "id": "RateCacheTableName",
+            "path": "RateLock-Dev-Database/RateCacheTableName",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.110.1"
+            }
+          },
+          "RateCacheTableArn": {
+            "id": "RateCacheTableArn",
+            "path": "RateLock-Dev-Database/RateCacheTableArn",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.110.1"
+            }
+          },
+          "AuditLogTableName": {
+            "id": "AuditLogTableName",
+            "path": "RateLock-Dev-Database/AuditLogTableName",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.110.1"
+            }
+          },
+          "AuditLogTableArn": {
+            "id": "AuditLogTableArn",
+            "path": "RateLock-Dev-Database/AuditLogTableArn",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.110.1"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "RateLock-Dev-Database/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "RateLock-Dev-Database/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.110.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.4.2"
+            }
+          },
+          "Exports": {
+            "id": "Exports",
+            "path": "RateLock-Dev-Database/Exports",
+            "children": {
+              "Output{\"Fn::GetAtt\":[\"RateCacheTable7CBD0DE3\",\"Arn\"]}": {
+                "id": "Output{\"Fn::GetAtt\":[\"RateCacheTable7CBD0DE3\",\"Arn\"]}",
+                "path": "RateLock-Dev-Database/Exports/Output{\"Fn::GetAtt\":[\"RateCacheTable7CBD0DE3\",\"Arn\"]}",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnOutput",
+                  "version": "2.110.1"
+                }
+              },
+              "Output{\"Fn::GetAtt\":[\"ConversionAuditLogTable3B1E57FF\",\"Arn\"]}": {
+                "id": "Output{\"Fn::GetAtt\":[\"ConversionAuditLogTable3B1E57FF\",\"Arn\"]}",
+                "path": "RateLock-Dev-Database/Exports/Output{\"Fn::GetAtt\":[\"ConversionAuditLogTable3B1E57FF\",\"Arn\"]}",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnOutput",
+                  "version": "2.110.1"
+                }
+              },
+              "Output{\"Ref\":\"RateCacheTable7CBD0DE3\"}": {
+                "id": "Output{\"Ref\":\"RateCacheTable7CBD0DE3\"}",
+                "path": "RateLock-Dev-Database/Exports/Output{\"Ref\":\"RateCacheTable7CBD0DE3\"}",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnOutput",
+                  "version": "2.110.1"
+                }
+              },
+              "Output{\"Ref\":\"ConversionAuditLogTable3B1E57FF\"}": {
+                "id": "Output{\"Ref\":\"ConversionAuditLogTable3B1E57FF\"}",
+                "path": "RateLock-Dev-Database/Exports/Output{\"Ref\":\"ConversionAuditLogTable3B1E57FF\"}",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnOutput",
+                  "version": "2.110.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.4.2"
+            }
+          },
+          "BootstrapVersion": {
+            "id": "BootstrapVersion",
+            "path": "RateLock-Dev-Database/BootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnParameter",
+              "version": "2.110.1"
+            }
+          },
+          "CheckBootstrapVersion": {
+            "id": "CheckBootstrapVersion",
+            "path": "RateLock-Dev-Database/CheckBootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnRule",
+              "version": "2.110.1"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.110.1"
+        }
+      },
+      "RateLock-Dev-Compute": {
+        "id": "RateLock-Dev-Compute",
+        "path": "RateLock-Dev-Compute",
+        "children": {
+          "DefaultVpc": {
+            "id": "DefaultVpc",
+            "path": "RateLock-Dev-Compute/DefaultVpc",
+            "children": {
+              "PublicSubnet1": {
+                "id": "PublicSubnet1",
+                "path": "RateLock-Dev-Compute/DefaultVpc/PublicSubnet1",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.110.1"
+                }
+              },
+              "PublicSubnet2": {
+                "id": "PublicSubnet2",
+                "path": "RateLock-Dev-Compute/DefaultVpc/PublicSubnet2",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.110.1"
+                }
+              },
+              "PublicSubnet3": {
+                "id": "PublicSubnet3",
+                "path": "RateLock-Dev-Compute/DefaultVpc/PublicSubnet3",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.110.1"
+                }
+              },
+              "PublicSubnet4": {
+                "id": "PublicSubnet4",
+                "path": "RateLock-Dev-Compute/DefaultVpc/PublicSubnet4",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.110.1"
+                }
+              },
+              "PublicSubnet5": {
+                "id": "PublicSubnet5",
+                "path": "RateLock-Dev-Compute/DefaultVpc/PublicSubnet5",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.110.1"
+                }
+              },
+              "PublicSubnet6": {
+                "id": "PublicSubnet6",
+                "path": "RateLock-Dev-Compute/DefaultVpc/PublicSubnet6",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.110.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.Resource",
+              "version": "2.110.1"
+            }
+          },
+          "RateLockCluster": {
+            "id": "RateLockCluster",
+            "path": "RateLock-Dev-Compute/RateLockCluster",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "RateLock-Dev-Compute/RateLockCluster/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ECS::Cluster",
+                  "aws:cdk:cloudformation:props": {
+                    "clusterName": "ratelock-cluster",
+                    "clusterSettings": [
+                      {
+                        "name": "containerInsights",
+                        "value": "disabled"
+                      }
+                    ],
+                    "tags": [
+                      {
+                        "key": "Environment",
+                        "value": "dev"
+                      },
+                      {
+                        "key": "ManagedBy",
+                        "value": "CDK"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "RateLock"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ecs.CfnCluster",
+                  "version": "2.110.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ecs.Cluster",
+              "version": "2.110.1"
+            }
+          },
+          "ConversionEngineRepo": {
+            "id": "ConversionEngineRepo",
+            "path": "RateLock-Dev-Compute/ConversionEngineRepo",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "RateLock-Dev-Compute/ConversionEngineRepo/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ECR::Repository",
+                  "aws:cdk:cloudformation:props": {
+                    "lifecyclePolicy": {
+                      "lifecyclePolicyText": "{\"rules\":[{\"rulePriority\":1,\"description\":\"Keep only 10 most recent images\",\"selection\":{\"tagStatus\":\"any\",\"countType\":\"imageCountMoreThan\",\"countNumber\":10},\"action\":{\"type\":\"expire\"}}]}"
+                    },
+                    "repositoryName": "ratelock/conversion-engine",
+                    "tags": [
+                      {
+                        "key": "Environment",
+                        "value": "dev"
+                      },
+                      {
+                        "key": "ManagedBy",
+                        "value": "CDK"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "RateLock"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ecr.CfnRepository",
+                  "version": "2.110.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ecr.Repository",
+              "version": "2.110.1"
+            }
+          },
+          "RateSyncRepo": {
+            "id": "RateSyncRepo",
+            "path": "RateLock-Dev-Compute/RateSyncRepo",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "RateLock-Dev-Compute/RateSyncRepo/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ECR::Repository",
+                  "aws:cdk:cloudformation:props": {
+                    "lifecyclePolicy": {
+                      "lifecyclePolicyText": "{\"rules\":[{\"rulePriority\":1,\"description\":\"Keep only 10 most recent images\",\"selection\":{\"tagStatus\":\"any\",\"countType\":\"imageCountMoreThan\",\"countNumber\":10},\"action\":{\"type\":\"expire\"}}]}"
+                    },
+                    "repositoryName": "ratelock/ratesync",
+                    "tags": [
+                      {
+                        "key": "Environment",
+                        "value": "dev"
+                      },
+                      {
+                        "key": "ManagedBy",
+                        "value": "CDK"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "RateLock"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ecr.CfnRepository",
+                  "version": "2.110.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ecr.Repository",
+              "version": "2.110.1"
+            }
+          },
+          "TaskExecutionRole": {
+            "id": "TaskExecutionRole",
+            "path": "RateLock-Dev-Compute/TaskExecutionRole",
+            "children": {
+              "ImportTaskExecutionRole": {
+                "id": "ImportTaskExecutionRole",
+                "path": "RateLock-Dev-Compute/TaskExecutionRole/ImportTaskExecutionRole",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.110.1"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "RateLock-Dev-Compute/TaskExecutionRole/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                  "aws:cdk:cloudformation:props": {
+                    "assumeRolePolicyDocument": {
+                      "Statement": [
+                        {
+                          "Action": "sts:AssumeRole",
+                          "Effect": "Allow",
+                          "Principal": {
+                            "Service": "ecs-tasks.amazonaws.com"
+                          }
+                        }
+                      ],
+                      "Version": "2012-10-17"
+                    },
+                    "managedPolicyArns": [
+                      {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "arn:",
+                            {
+                              "Ref": "AWS::Partition"
+                            },
+                            ":iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+                          ]
+                        ]
+                      }
+                    ],
+                    "tags": [
+                      {
+                        "key": "Environment",
+                        "value": "dev"
+                      },
+                      {
+                        "key": "ManagedBy",
+                        "value": "CDK"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "RateLock"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                  "version": "2.110.1"
+                }
+              },
+              "DefaultPolicy": {
+                "id": "DefaultPolicy",
+                "path": "RateLock-Dev-Compute/TaskExecutionRole/DefaultPolicy",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "RateLock-Dev-Compute/TaskExecutionRole/DefaultPolicy/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                      "aws:cdk:cloudformation:props": {
+                        "policyDocument": {
+                          "Statement": [
+                            {
+                              "Action": [
+                                "ecr:BatchCheckLayerAvailability",
+                                "ecr:BatchGetImage",
+                                "ecr:GetDownloadUrlForLayer"
+                              ],
+                              "Effect": "Allow",
+                              "Resource": [
+                                {
+                                  "Fn::GetAtt": [
+                                    "ConversionEngineRepo509F680B",
+                                    "Arn"
+                                  ]
+                                },
+                                {
+                                  "Fn::GetAtt": [
+                                    "RateSyncRepoBEBB45A1",
+                                    "Arn"
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "Action": "ecr:GetAuthorizationToken",
+                              "Effect": "Allow",
+                              "Resource": "*"
+                            },
+                            {
+                              "Action": [
+                                "logs:CreateLogStream",
+                                "logs:PutLogEvents"
+                              ],
+                              "Effect": "Allow",
+                              "Resource": [
+                                {
+                                  "Fn::GetAtt": [
+                                    "ConversionEngineLogGroupF81B52EF",
+                                    "Arn"
+                                  ]
+                                },
+                                {
+                                  "Fn::GetAtt": [
+                                    "RateSyncLogGroupF0D0E197",
+                                    "Arn"
+                                  ]
+                                }
+                              ]
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "policyName": "TaskExecutionRoleDefaultPolicyA84DD1B0",
+                        "roles": [
+                          {
+                            "Ref": "TaskExecutionRole250D2532"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                      "version": "2.110.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Policy",
+                  "version": "2.110.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_iam.Role",
+              "version": "2.110.1"
+            }
+          },
+          "TaskRole": {
+            "id": "TaskRole",
+            "path": "RateLock-Dev-Compute/TaskRole",
+            "children": {
+              "ImportTaskRole": {
+                "id": "ImportTaskRole",
+                "path": "RateLock-Dev-Compute/TaskRole/ImportTaskRole",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.Resource",
+                  "version": "2.110.1"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "RateLock-Dev-Compute/TaskRole/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                  "aws:cdk:cloudformation:props": {
+                    "assumeRolePolicyDocument": {
+                      "Statement": [
+                        {
+                          "Action": "sts:AssumeRole",
+                          "Effect": "Allow",
+                          "Principal": {
+                            "Service": "ecs-tasks.amazonaws.com"
+                          }
+                        }
+                      ],
+                      "Version": "2012-10-17"
+                    },
+                    "policies": [
+                      {
+                        "policyName": "DynamoDBAccess",
+                        "policyDocument": {
+                          "Statement": [
+                            {
+                              "Action": [
+                                "dynamodb:DeleteItem",
+                                "dynamodb:GetItem",
+                                "dynamodb:PutItem",
+                                "dynamodb:Query",
+                                "dynamodb:Scan",
+                                "dynamodb:UpdateItem"
+                              ],
+                              "Effect": "Allow",
+                              "Resource": [
+                                {
+                                  "Fn::ImportValue": "RateLock-Dev-Database:ExportsOutputFnGetAttConversionAuditLogTable3B1E57FFArn30528F82"
+                                },
+                                {
+                                  "Fn::ImportValue": "RateLock-Dev-Database:ExportsOutputFnGetAttRateCacheTable7CBD0DE3Arn69888416"
+                                }
+                              ]
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        }
+                      }
+                    ],
+                    "tags": [
+                      {
+                        "key": "Environment",
+                        "value": "dev"
+                      },
+                      {
+                        "key": "ManagedBy",
+                        "value": "CDK"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "RateLock"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                  "version": "2.110.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_iam.Role",
+              "version": "2.110.1"
+            }
+          },
+          "ConversionEngineLogGroup": {
+            "id": "ConversionEngineLogGroup",
+            "path": "RateLock-Dev-Compute/ConversionEngineLogGroup",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "RateLock-Dev-Compute/ConversionEngineLogGroup/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Logs::LogGroup",
+                  "aws:cdk:cloudformation:props": {
+                    "logGroupName": "/ecs/ratelock-conversion-engine",
+                    "retentionInDays": 7,
+                    "tags": [
+                      {
+                        "key": "Environment",
+                        "value": "dev"
+                      },
+                      {
+                        "key": "ManagedBy",
+                        "value": "CDK"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "RateLock"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_logs.CfnLogGroup",
+                  "version": "2.110.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_logs.LogGroup",
+              "version": "2.110.1"
+            }
+          },
+          "RateSyncLogGroup": {
+            "id": "RateSyncLogGroup",
+            "path": "RateLock-Dev-Compute/RateSyncLogGroup",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "RateLock-Dev-Compute/RateSyncLogGroup/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Logs::LogGroup",
+                  "aws:cdk:cloudformation:props": {
+                    "logGroupName": "/ecs/ratelock-ratesync",
+                    "retentionInDays": 7,
+                    "tags": [
+                      {
+                        "key": "Environment",
+                        "value": "dev"
+                      },
+                      {
+                        "key": "ManagedBy",
+                        "value": "CDK"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "RateLock"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_logs.CfnLogGroup",
+                  "version": "2.110.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_logs.LogGroup",
+              "version": "2.110.1"
+            }
+          },
+          "ConversionEngineTask": {
+            "id": "ConversionEngineTask",
+            "path": "RateLock-Dev-Compute/ConversionEngineTask",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "RateLock-Dev-Compute/ConversionEngineTask/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ECS::TaskDefinition",
+                  "aws:cdk:cloudformation:props": {
+                    "containerDefinitions": [
+                      {
+                        "essential": true,
+                        "image": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              {
+                                "Fn::Select": [
+                                  4,
+                                  {
+                                    "Fn::Split": [
+                                      ":",
+                                      {
+                                        "Fn::GetAtt": [
+                                          "ConversionEngineRepo509F680B",
+                                          "Arn"
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              ".dkr.ecr.",
+                              {
+                                "Fn::Select": [
+                                  3,
+                                  {
+                                    "Fn::Split": [
+                                      ":",
+                                      {
+                                        "Fn::GetAtt": [
+                                          "ConversionEngineRepo509F680B",
+                                          "Arn"
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              ".",
+                              {
+                                "Ref": "AWS::URLSuffix"
+                              },
+                              "/",
+                              {
+                                "Ref": "ConversionEngineRepo509F680B"
+                              },
+                              ":latest"
+                            ]
+                          ]
+                        },
+                        "name": "conversion-engine",
+                        "portMappings": [
+                          {
+                            "containerPort": 8080,
+                            "protocol": "tcp"
+                          }
+                        ],
+                        "logConfiguration": {
+                          "logDriver": "awslogs",
+                          "options": {
+                            "awslogs-group": {
+                              "Ref": "ConversionEngineLogGroupF81B52EF"
+                            },
+                            "awslogs-stream-prefix": "ecs",
+                            "awslogs-region": "us-east-1"
+                          }
+                        },
+                        "environment": [
+                          {
+                            "name": "AWS_DEFAULT_REGION",
+                            "value": "us-east-1"
+                          },
+                          {
+                            "name": "RATE_CACHE_TABLE",
+                            "value": {
+                              "Fn::ImportValue": "RateLock-Dev-Database:ExportsOutputRefRateCacheTable7CBD0DE31C90AEF1"
+                            }
+                          },
+                          {
+                            "name": "AUDIT_LOG_TABLE",
+                            "value": {
+                              "Fn::ImportValue": "RateLock-Dev-Database:ExportsOutputRefConversionAuditLogTable3B1E57FF533AF931"
+                            }
+                          },
+                          {
+                            "name": "ENVIRONMENT",
+                            "value": "production"
+                          }
+                        ],
+                        "healthCheck": {
+                          "command": [
+                            "CMD-SHELL",
+                            "curl -f http://localhost:8080/health || exit 1"
+                          ],
+                          "interval": 30,
+                          "retries": 3,
+                          "startPeriod": 60,
+                          "timeout": 5
+                        }
+                      }
+                    ],
+                    "cpu": "256",
+                    "executionRoleArn": {
+                      "Fn::GetAtt": [
+                        "TaskExecutionRole250D2532",
+                        "Arn"
+                      ]
+                    },
+                    "family": "ratelock-conversion-engine",
+                    "memory": "512",
+                    "networkMode": "awsvpc",
+                    "requiresCompatibilities": [
+                      "FARGATE"
+                    ],
+                    "tags": [
+                      {
+                        "key": "Environment",
+                        "value": "dev"
+                      },
+                      {
+                        "key": "ManagedBy",
+                        "value": "CDK"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "RateLock"
+                      }
+                    ],
+                    "taskRoleArn": {
+                      "Fn::GetAtt": [
+                        "TaskRole30FC0FBB",
+                        "Arn"
+                      ]
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ecs.CfnTaskDefinition",
+                  "version": "2.110.1"
+                }
+              },
+              "conversion-engine": {
+                "id": "conversion-engine",
+                "path": "RateLock-Dev-Compute/ConversionEngineTask/conversion-engine",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ecs.ContainerDefinition",
+                  "version": "2.110.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ecs.FargateTaskDefinition",
+              "version": "2.110.1"
+            }
+          },
+          "RateSyncTask": {
+            "id": "RateSyncTask",
+            "path": "RateLock-Dev-Compute/RateSyncTask",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "RateLock-Dev-Compute/RateSyncTask/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ECS::TaskDefinition",
+                  "aws:cdk:cloudformation:props": {
+                    "containerDefinitions": [
+                      {
+                        "essential": true,
+                        "image": {
+                          "Fn::Join": [
+                            "",
+                            [
+                              {
+                                "Fn::Select": [
+                                  4,
+                                  {
+                                    "Fn::Split": [
+                                      ":",
+                                      {
+                                        "Fn::GetAtt": [
+                                          "RateSyncRepoBEBB45A1",
+                                          "Arn"
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              ".dkr.ecr.",
+                              {
+                                "Fn::Select": [
+                                  3,
+                                  {
+                                    "Fn::Split": [
+                                      ":",
+                                      {
+                                        "Fn::GetAtt": [
+                                          "RateSyncRepoBEBB45A1",
+                                          "Arn"
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              ".",
+                              {
+                                "Ref": "AWS::URLSuffix"
+                              },
+                              "/",
+                              {
+                                "Ref": "RateSyncRepoBEBB45A1"
+                              },
+                              ":latest"
+                            ]
+                          ]
+                        },
+                        "name": "ratesync",
+                        "logConfiguration": {
+                          "logDriver": "awslogs",
+                          "options": {
+                            "awslogs-group": {
+                              "Ref": "RateSyncLogGroupF0D0E197"
+                            },
+                            "awslogs-stream-prefix": "ecs",
+                            "awslogs-region": "us-east-1"
+                          }
+                        },
+                        "environment": [
+                          {
+                            "name": "AWS_DEFAULT_REGION",
+                            "value": "us-east-1"
+                          },
+                          {
+                            "name": "RATE_CACHE_TABLE",
+                            "value": {
+                              "Fn::ImportValue": "RateLock-Dev-Database:ExportsOutputRefRateCacheTable7CBD0DE31C90AEF1"
+                            }
+                          },
+                          {
+                            "name": "ENVIRONMENT",
+                            "value": "production"
+                          }
+                        ]
+                      }
+                    ],
+                    "cpu": "256",
+                    "executionRoleArn": {
+                      "Fn::GetAtt": [
+                        "TaskExecutionRole250D2532",
+                        "Arn"
+                      ]
+                    },
+                    "family": "ratelock-ratesync",
+                    "memory": "512",
+                    "networkMode": "awsvpc",
+                    "requiresCompatibilities": [
+                      "FARGATE"
+                    ],
+                    "tags": [
+                      {
+                        "key": "Environment",
+                        "value": "dev"
+                      },
+                      {
+                        "key": "ManagedBy",
+                        "value": "CDK"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "RateLock"
+                      }
+                    ],
+                    "taskRoleArn": {
+                      "Fn::GetAtt": [
+                        "TaskRole30FC0FBB",
+                        "Arn"
+                      ]
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ecs.CfnTaskDefinition",
+                  "version": "2.110.1"
+                }
+              },
+              "ratesync": {
+                "id": "ratesync",
+                "path": "RateLock-Dev-Compute/RateSyncTask/ratesync",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ecs.ContainerDefinition",
+                  "version": "2.110.1"
+                }
+              },
+              "EventsRole": {
+                "id": "EventsRole",
+                "path": "RateLock-Dev-Compute/RateSyncTask/EventsRole",
+                "children": {
+                  "ImportEventsRole": {
+                    "id": "ImportEventsRole",
+                    "path": "RateLock-Dev-Compute/RateSyncTask/EventsRole/ImportEventsRole",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.110.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "RateLock-Dev-Compute/RateSyncTask/EventsRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "events.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "tags": [
+                          {
+                            "key": "Environment",
+                            "value": "dev"
+                          },
+                          {
+                            "key": "ManagedBy",
+                            "value": "CDK"
+                          },
+                          {
+                            "key": "Project",
+                            "value": "RateLock"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.110.1"
+                    }
+                  },
+                  "DefaultPolicy": {
+                    "id": "DefaultPolicy",
+                    "path": "RateLock-Dev-Compute/RateSyncTask/EventsRole/DefaultPolicy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "RateLock-Dev-Compute/RateSyncTask/EventsRole/DefaultPolicy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                          "aws:cdk:cloudformation:props": {
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "ecs:RunTask",
+                                  "Condition": {
+                                    "ArnEquals": {
+                                      "ecs:cluster": {
+                                        "Fn::GetAtt": [
+                                          "RateLockCluster6356FFDD",
+                                          "Arn"
+                                        ]
+                                      }
+                                    }
+                                  },
+                                  "Effect": "Allow",
+                                  "Resource": {
+                                    "Ref": "RateSyncTask21038A71"
+                                  }
+                                },
+                                {
+                                  "Action": "iam:PassRole",
+                                  "Effect": "Allow",
+                                  "Resource": [
+                                    {
+                                      "Fn::GetAtt": [
+                                        "TaskExecutionRole250D2532",
+                                        "Arn"
+                                      ]
+                                    },
+                                    {
+                                      "Fn::GetAtt": [
+                                        "TaskRole30FC0FBB",
+                                        "Arn"
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "policyName": "RateSyncTaskEventsRoleDefaultPolicy8E1FB230",
+                            "roles": [
+                              {
+                                "Ref": "RateSyncTaskEventsRoleBC6228BD"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                          "version": "2.110.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Policy",
+                      "version": "2.110.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.110.1"
+                }
+              },
+              "SecurityGroup": {
+                "id": "SecurityGroup",
+                "path": "RateLock-Dev-Compute/RateSyncTask/SecurityGroup",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "RateLock-Dev-Compute/RateSyncTask/SecurityGroup/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroup",
+                      "aws:cdk:cloudformation:props": {
+                        "groupDescription": "RateLock-Dev-Compute/RateSyncTask/SecurityGroup",
+                        "securityGroupEgress": [
+                          {
+                            "cidrIp": "0.0.0.0/0",
+                            "description": "Allow all outbound traffic by default",
+                            "ipProtocol": "-1"
+                          }
+                        ],
+                        "tags": [
+                          {
+                            "key": "Environment",
+                            "value": "dev"
+                          },
+                          {
+                            "key": "ManagedBy",
+                            "value": "CDK"
+                          },
+                          {
+                            "key": "Project",
+                            "value": "RateLock"
+                          }
+                        ],
+                        "vpcId": "vpc-05e281cbc42470e1f"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroup",
+                      "version": "2.110.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.SecurityGroup",
+                  "version": "2.110.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ecs.FargateTaskDefinition",
+              "version": "2.110.1"
+            }
+          },
+          "RateLockALB": {
+            "id": "RateLockALB",
+            "path": "RateLock-Dev-Compute/RateLockALB",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "RateLock-Dev-Compute/RateLockALB/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+                  "aws:cdk:cloudformation:props": {
+                    "loadBalancerAttributes": [
+                      {
+                        "key": "deletion_protection.enabled",
+                        "value": "false"
+                      }
+                    ],
+                    "name": "ratelock-alb",
+                    "scheme": "internet-facing",
+                    "securityGroups": [
+                      {
+                        "Fn::GetAtt": [
+                          "RateLockALBSecurityGroup96768DE0",
+                          "GroupId"
+                        ]
+                      }
+                    ],
+                    "subnets": [
+                      "subnet-0213544bca0ad7b6c",
+                      "subnet-071ba2ea9138b0ced",
+                      "subnet-068e42bb2a0b457fa",
+                      "subnet-040d6852d43f9151b",
+                      "subnet-0b41ed93d83ce607a",
+                      "subnet-0c6e91d815a485b5c"
+                    ],
+                    "tags": [
+                      {
+                        "key": "Environment",
+                        "value": "dev"
+                      },
+                      {
+                        "key": "ManagedBy",
+                        "value": "CDK"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "RateLock"
+                      }
+                    ],
+                    "type": "application"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.CfnLoadBalancer",
+                  "version": "2.110.1"
+                }
+              },
+              "SecurityGroup": {
+                "id": "SecurityGroup",
+                "path": "RateLock-Dev-Compute/RateLockALB/SecurityGroup",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "RateLock-Dev-Compute/RateLockALB/SecurityGroup/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroup",
+                      "aws:cdk:cloudformation:props": {
+                        "groupDescription": "Automatically created Security Group for ELB RateLockDevComputeRateLockALBEE3E5E3D",
+                        "securityGroupIngress": [
+                          {
+                            "cidrIp": "0.0.0.0/0",
+                            "ipProtocol": "tcp",
+                            "fromPort": 80,
+                            "toPort": 80,
+                            "description": "Allow from anyone on port 80"
+                          }
+                        ],
+                        "tags": [
+                          {
+                            "key": "Environment",
+                            "value": "dev"
+                          },
+                          {
+                            "key": "ManagedBy",
+                            "value": "CDK"
+                          },
+                          {
+                            "key": "Project",
+                            "value": "RateLock"
+                          }
+                        ],
+                        "vpcId": "vpc-05e281cbc42470e1f"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroup",
+                      "version": "2.110.1"
+                    }
+                  },
+                  "to RateLockDevComputeConversionEngineServiceSecurityGroup61FFFCAC:8080": {
+                    "id": "to RateLockDevComputeConversionEngineServiceSecurityGroup61FFFCAC:8080",
+                    "path": "RateLock-Dev-Compute/RateLockALB/SecurityGroup/to RateLockDevComputeConversionEngineServiceSecurityGroup61FFFCAC:8080",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroupEgress",
+                      "aws:cdk:cloudformation:props": {
+                        "description": "Load balancer to target",
+                        "destinationSecurityGroupId": {
+                          "Fn::GetAtt": [
+                            "ConversionEngineServiceSecurityGroup13F3A1A7",
+                            "GroupId"
+                          ]
+                        },
+                        "fromPort": 8080,
+                        "groupId": {
+                          "Fn::GetAtt": [
+                            "RateLockALBSecurityGroup96768DE0",
+                            "GroupId"
+                          ]
+                        },
+                        "ipProtocol": "tcp",
+                        "toPort": 8080
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroupEgress",
+                      "version": "2.110.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.SecurityGroup",
+                  "version": "2.110.1"
+                }
+              },
+              "ALBListener": {
+                "id": "ALBListener",
+                "path": "RateLock-Dev-Compute/RateLockALB/ALBListener",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "RateLock-Dev-Compute/RateLockALB/ALBListener/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ElasticLoadBalancingV2::Listener",
+                      "aws:cdk:cloudformation:props": {
+                        "defaultActions": [
+                          {
+                            "type": "forward",
+                            "targetGroupArn": {
+                              "Ref": "ConversionEngineTargetGroup59E48CF9"
+                            }
+                          }
+                        ],
+                        "loadBalancerArn": {
+                          "Ref": "RateLockALB91B2349A"
+                        },
+                        "port": 80,
+                        "protocol": "HTTP"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.CfnListener",
+                      "version": "2.110.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.ApplicationListener",
+                  "version": "2.110.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.ApplicationLoadBalancer",
+              "version": "2.110.1"
+            }
+          },
+          "ConversionEngineTargetGroup": {
+            "id": "ConversionEngineTargetGroup",
+            "path": "RateLock-Dev-Compute/ConversionEngineTargetGroup",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "RateLock-Dev-Compute/ConversionEngineTargetGroup/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+                  "aws:cdk:cloudformation:props": {
+                    "healthCheckIntervalSeconds": 30,
+                    "healthCheckPath": "/health",
+                    "healthCheckTimeoutSeconds": 5,
+                    "healthyThresholdCount": 2,
+                    "matcher": {
+                      "httpCode": "200"
+                    },
+                    "port": 8080,
+                    "protocol": "HTTP",
+                    "tags": [
+                      {
+                        "key": "Environment",
+                        "value": "dev"
+                      },
+                      {
+                        "key": "ManagedBy",
+                        "value": "CDK"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "RateLock"
+                      }
+                    ],
+                    "targetGroupAttributes": [
+                      {
+                        "key": "stickiness.enabled",
+                        "value": "false"
+                      }
+                    ],
+                    "targetType": "ip",
+                    "unhealthyThresholdCount": 3,
+                    "vpcId": "vpc-05e281cbc42470e1f"
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.CfnTargetGroup",
+                  "version": "2.110.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_elasticloadbalancingv2.ApplicationTargetGroup",
+              "version": "2.110.1"
+            }
+          },
+          "ConversionEngineService": {
+            "id": "ConversionEngineService",
+            "path": "RateLock-Dev-Compute/ConversionEngineService",
+            "children": {
+              "Service": {
+                "id": "Service",
+                "path": "RateLock-Dev-Compute/ConversionEngineService/Service",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ECS::Service",
+                  "aws:cdk:cloudformation:props": {
+                    "cluster": {
+                      "Ref": "RateLockCluster6356FFDD"
+                    },
+                    "deploymentConfiguration": {
+                      "maximumPercent": 200,
+                      "minimumHealthyPercent": 50,
+                      "alarms": {
+                        "alarmNames": [],
+                        "enable": false,
+                        "rollback": false
+                      }
+                    },
+                    "desiredCount": 1,
+                    "enableEcsManagedTags": false,
+                    "healthCheckGracePeriodSeconds": 120,
+                    "launchType": "FARGATE",
+                    "loadBalancers": [
+                      {
+                        "targetGroupArn": {
+                          "Ref": "ConversionEngineTargetGroup59E48CF9"
+                        },
+                        "containerName": "conversion-engine",
+                        "containerPort": 8080
+                      }
+                    ],
+                    "networkConfiguration": {
+                      "awsvpcConfiguration": {
+                        "assignPublicIp": "ENABLED",
+                        "subnets": [
+                          "subnet-0213544bca0ad7b6c",
+                          "subnet-071ba2ea9138b0ced",
+                          "subnet-068e42bb2a0b457fa",
+                          "subnet-040d6852d43f9151b",
+                          "subnet-0b41ed93d83ce607a",
+                          "subnet-0c6e91d815a485b5c"
+                        ],
+                        "securityGroups": [
+                          {
+                            "Fn::GetAtt": [
+                              "ConversionEngineServiceSecurityGroup13F3A1A7",
+                              "GroupId"
+                            ]
+                          }
+                        ]
+                      }
+                    },
+                    "serviceName": "conversion-engine",
+                    "tags": [
+                      {
+                        "key": "Environment",
+                        "value": "dev"
+                      },
+                      {
+                        "key": "ManagedBy",
+                        "value": "CDK"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "RateLock"
+                      }
+                    ],
+                    "taskDefinition": {
+                      "Ref": "ConversionEngineTaskD8F48D04"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ecs.CfnService",
+                  "version": "2.110.1"
+                }
+              },
+              "SecurityGroup": {
+                "id": "SecurityGroup",
+                "path": "RateLock-Dev-Compute/ConversionEngineService/SecurityGroup",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "RateLock-Dev-Compute/ConversionEngineService/SecurityGroup/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroup",
+                      "aws:cdk:cloudformation:props": {
+                        "groupDescription": "RateLock-Dev-Compute/ConversionEngineService/SecurityGroup",
+                        "securityGroupEgress": [
+                          {
+                            "cidrIp": "0.0.0.0/0",
+                            "description": "Allow all outbound traffic by default",
+                            "ipProtocol": "-1"
+                          }
+                        ],
+                        "tags": [
+                          {
+                            "key": "Environment",
+                            "value": "dev"
+                          },
+                          {
+                            "key": "ManagedBy",
+                            "value": "CDK"
+                          },
+                          {
+                            "key": "Project",
+                            "value": "RateLock"
+                          }
+                        ],
+                        "vpcId": "vpc-05e281cbc42470e1f"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroup",
+                      "version": "2.110.1"
+                    }
+                  },
+                  "from RateLockDevComputeRateLockALBSecurityGroup2BCF8188:8080": {
+                    "id": "from RateLockDevComputeRateLockALBSecurityGroup2BCF8188:8080",
+                    "path": "RateLock-Dev-Compute/ConversionEngineService/SecurityGroup/from RateLockDevComputeRateLockALBSecurityGroup2BCF8188:8080",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::EC2::SecurityGroupIngress",
+                      "aws:cdk:cloudformation:props": {
+                        "description": "Load balancer to target",
+                        "fromPort": 8080,
+                        "groupId": {
+                          "Fn::GetAtt": [
+                            "ConversionEngineServiceSecurityGroup13F3A1A7",
+                            "GroupId"
+                          ]
+                        },
+                        "ipProtocol": "tcp",
+                        "sourceSecurityGroupId": {
+                          "Fn::GetAtt": [
+                            "RateLockALBSecurityGroup96768DE0",
+                            "GroupId"
+                          ]
+                        },
+                        "toPort": 8080
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_ec2.CfnSecurityGroupIngress",
+                      "version": "2.110.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_ec2.SecurityGroup",
+                  "version": "2.110.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_ecs.FargateService",
+              "version": "2.110.1"
+            }
+          },
+          "RateSyncSchedule": {
+            "id": "RateSyncSchedule",
+            "path": "RateLock-Dev-Compute/RateSyncSchedule",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "RateLock-Dev-Compute/RateSyncSchedule/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Events::Rule",
+                  "aws:cdk:cloudformation:props": {
+                    "description": "Trigger RateSync service every hour",
+                    "name": "ratelock-hourly-sync",
+                    "scheduleExpression": "rate(1 hour)",
+                    "state": "ENABLED",
+                    "targets": [
+                      {
+                        "id": "Target0",
+                        "arn": {
+                          "Fn::GetAtt": [
+                            "RateLockCluster6356FFDD",
+                            "Arn"
+                          ]
+                        },
+                        "roleArn": {
+                          "Fn::GetAtt": [
+                            "RateSyncTaskEventsRoleBC6228BD",
+                            "Arn"
+                          ]
+                        },
+                        "ecsParameters": {
+                          "taskCount": 1,
+                          "taskDefinitionArn": {
+                            "Ref": "RateSyncTask21038A71"
+                          },
+                          "launchType": "FARGATE",
+                          "platformVersion": "LATEST",
+                          "networkConfiguration": {
+                            "awsVpcConfiguration": {
+                              "subnets": [
+                                "subnet-0213544bca0ad7b6c",
+                                "subnet-071ba2ea9138b0ced",
+                                "subnet-068e42bb2a0b457fa",
+                                "subnet-040d6852d43f9151b",
+                                "subnet-0b41ed93d83ce607a",
+                                "subnet-0c6e91d815a485b5c"
+                              ],
+                              "assignPublicIp": "ENABLED",
+                              "securityGroups": [
+                                {
+                                  "Fn::GetAtt": [
+                                    "RateSyncTaskSecurityGroupA6567E8D",
+                                    "GroupId"
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        "input": "{}"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_events.CfnRule",
+                  "version": "2.110.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_events.Rule",
+              "version": "2.110.1"
+            }
+          },
+          "LoadBalancerDNS": {
+            "id": "LoadBalancerDNS",
+            "path": "RateLock-Dev-Compute/LoadBalancerDNS",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.110.1"
+            }
+          },
+          "ConversionEngineRepoUri": {
+            "id": "ConversionEngineRepoUri",
+            "path": "RateLock-Dev-Compute/ConversionEngineRepoUri",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.110.1"
+            }
+          },
+          "RateSyncRepoUri": {
+            "id": "RateSyncRepoUri",
+            "path": "RateLock-Dev-Compute/RateSyncRepoUri",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.110.1"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "RateLock-Dev-Compute/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "RateLock-Dev-Compute/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.110.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.4.2"
+            }
+          },
+          "BootstrapVersion": {
+            "id": "BootstrapVersion",
+            "path": "RateLock-Dev-Compute/BootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnParameter",
+              "version": "2.110.1"
+            }
+          },
+          "CheckBootstrapVersion": {
+            "id": "CheckBootstrapVersion",
+            "path": "RateLock-Dev-Compute/CheckBootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnRule",
+              "version": "2.110.1"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.110.1"
+        }
+      },
+      "RateLock-Dev-Api": {
+        "id": "RateLock-Dev-Api",
+        "path": "RateLock-Dev-Api",
+        "children": {
+          "ApiGatewayLogs": {
+            "id": "ApiGatewayLogs",
+            "path": "RateLock-Dev-Api/ApiGatewayLogs",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "RateLock-Dev-Api/ApiGatewayLogs/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Logs::LogGroup",
+                  "aws:cdk:cloudformation:props": {
+                    "logGroupName": "/aws/apigateway/ratelock-api",
+                    "retentionInDays": 7,
+                    "tags": [
+                      {
+                        "key": "Environment",
+                        "value": "dev"
+                      },
+                      {
+                        "key": "ManagedBy",
+                        "value": "CDK"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "RateLock"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_logs.CfnLogGroup",
+                  "version": "2.110.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_logs.LogGroup",
+              "version": "2.110.1"
+            }
+          },
+          "RateLockApi": {
+            "id": "RateLockApi",
+            "path": "RateLock-Dev-Api/RateLockApi",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "RateLock-Dev-Api/RateLockApi/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ApiGateway::RestApi",
+                  "aws:cdk:cloudformation:props": {
+                    "description": "RateLock auditable currency conversion API",
+                    "endpointConfiguration": {
+                      "types": [
+                        "REGIONAL"
+                      ]
+                    },
+                    "name": "ratelock-api",
+                    "tags": [
+                      {
+                        "key": "Environment",
+                        "value": "dev"
+                      },
+                      {
+                        "key": "ManagedBy",
+                        "value": "CDK"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "RateLock"
+                      }
+                    ]
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_apigateway.CfnRestApi",
+                  "version": "2.110.1"
+                }
+              },
+              "CloudWatchRole": {
+                "id": "CloudWatchRole",
+                "path": "RateLock-Dev-Api/RateLockApi/CloudWatchRole",
+                "children": {
+                  "ImportCloudWatchRole": {
+                    "id": "ImportCloudWatchRole",
+                    "path": "RateLock-Dev-Api/RateLockApi/CloudWatchRole/ImportCloudWatchRole",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.110.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "RateLock-Dev-Api/RateLockApi/CloudWatchRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "apigateway.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "managedPolicyArns": [
+                          {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "arn:",
+                                {
+                                  "Ref": "AWS::Partition"
+                                },
+                                ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
+                              ]
+                            ]
+                          }
+                        ],
+                        "tags": [
+                          {
+                            "key": "Environment",
+                            "value": "dev"
+                          },
+                          {
+                            "key": "ManagedBy",
+                            "value": "CDK"
+                          },
+                          {
+                            "key": "Project",
+                            "value": "RateLock"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.110.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.110.1"
+                }
+              },
+              "Account": {
+                "id": "Account",
+                "path": "RateLock-Dev-Api/RateLockApi/Account",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::ApiGateway::Account",
+                  "aws:cdk:cloudformation:props": {
+                    "cloudWatchRoleArn": {
+                      "Fn::GetAtt": [
+                        "RateLockApiCloudWatchRole0B15FB2D",
+                        "Arn"
+                      ]
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_apigateway.CfnAccount",
+                  "version": "2.110.1"
+                }
+              },
+              "Deployment": {
+                "id": "Deployment",
+                "path": "RateLock-Dev-Api/RateLockApi/Deployment",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "RateLock-Dev-Api/RateLockApi/Deployment/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ApiGateway::Deployment",
+                      "aws:cdk:cloudformation:props": {
+                        "description": "RateLock auditable currency conversion API",
+                        "restApiId": {
+                          "Ref": "RateLockApi885D4D79"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigateway.CfnDeployment",
+                      "version": "2.110.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_apigateway.Deployment",
+                  "version": "2.110.1"
+                }
+              },
+              "DeploymentStage.v1": {
+                "id": "DeploymentStage.v1",
+                "path": "RateLock-Dev-Api/RateLockApi/DeploymentStage.v1",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "RateLock-Dev-Api/RateLockApi/DeploymentStage.v1/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::ApiGateway::Stage",
+                      "aws:cdk:cloudformation:props": {
+                        "accessLogSetting": {
+                          "destinationArn": {
+                            "Fn::GetAtt": [
+                              "ApiGatewayLogs22899D9B",
+                              "Arn"
+                            ]
+                          },
+                          "format": "$context.identity.sourceIp $context.identity.caller $context.identity.user [$context.requestTime] \"$context.httpMethod $context.resourcePath $context.protocol\" $context.status $context.responseLength $context.requestId"
+                        },
+                        "deploymentId": {
+                          "Ref": "RateLockApiDeployment21BDBFEA8843430a8219e0d2ab915f6f9f3551a6"
+                        },
+                        "methodSettings": [
+                          {
+                            "httpMethod": "*",
+                            "resourcePath": "/*",
+                            "dataTraceEnabled": true,
+                            "loggingLevel": "INFO",
+                            "metricsEnabled": true
+                          }
+                        ],
+                        "restApiId": {
+                          "Ref": "RateLockApi885D4D79"
+                        },
+                        "stageName": "v1",
+                        "tags": [
+                          {
+                            "key": "Environment",
+                            "value": "dev"
+                          },
+                          {
+                            "key": "ManagedBy",
+                            "value": "CDK"
+                          },
+                          {
+                            "key": "Project",
+                            "value": "RateLock"
+                          }
+                        ],
+                        "tracingEnabled": false
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigateway.CfnStage",
+                      "version": "2.110.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_apigateway.Stage",
+                  "version": "2.110.1"
+                }
+              },
+              "Endpoint": {
+                "id": "Endpoint",
+                "path": "RateLock-Dev-Api/RateLockApi/Endpoint",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnOutput",
+                  "version": "2.110.1"
+                }
+              },
+              "Default": {
+                "id": "Default",
+                "path": "RateLock-Dev-Api/RateLockApi/Default",
+                "children": {
+                  "OPTIONS": {
+                    "id": "OPTIONS",
+                    "path": "RateLock-Dev-Api/RateLockApi/Default/OPTIONS",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "RateLock-Dev-Api/RateLockApi/Default/OPTIONS/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                          "aws:cdk:cloudformation:props": {
+                            "apiKeyRequired": false,
+                            "authorizationType": "NONE",
+                            "httpMethod": "OPTIONS",
+                            "integration": {
+                              "type": "MOCK",
+                              "requestTemplates": {
+                                "application/json": "{ statusCode: 200 }"
+                              },
+                              "integrationResponses": [
+                                {
+                                  "statusCode": "204",
+                                  "responseParameters": {
+                                    "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+                                    "method.response.header.Access-Control-Allow-Origin": "'*'",
+                                    "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+                                  }
+                                }
+                              ]
+                            },
+                            "methodResponses": [
+                              {
+                                "statusCode": "204",
+                                "responseParameters": {
+                                  "method.response.header.Access-Control-Allow-Headers": true,
+                                  "method.response.header.Access-Control-Allow-Origin": true,
+                                  "method.response.header.Access-Control-Allow-Methods": true
+                                }
+                              }
+                            ],
+                            "resourceId": {
+                              "Fn::GetAtt": [
+                                "RateLockApi885D4D79",
+                                "RootResourceId"
+                              ]
+                            },
+                            "restApiId": {
+                              "Ref": "RateLockApi885D4D79"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                          "version": "2.110.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                      "version": "2.110.1"
+                    }
+                  },
+                  "health": {
+                    "id": "health",
+                    "path": "RateLock-Dev-Api/RateLockApi/Default/health",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "RateLock-Dev-Api/RateLockApi/Default/health/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ApiGateway::Resource",
+                          "aws:cdk:cloudformation:props": {
+                            "parentId": {
+                              "Fn::GetAtt": [
+                                "RateLockApi885D4D79",
+                                "RootResourceId"
+                              ]
+                            },
+                            "pathPart": "health",
+                            "restApiId": {
+                              "Ref": "RateLockApi885D4D79"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.CfnResource",
+                          "version": "2.110.1"
+                        }
+                      },
+                      "OPTIONS": {
+                        "id": "OPTIONS",
+                        "path": "RateLock-Dev-Api/RateLockApi/Default/health/OPTIONS",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "RateLock-Dev-Api/RateLockApi/Default/health/OPTIONS/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                              "aws:cdk:cloudformation:props": {
+                                "apiKeyRequired": false,
+                                "authorizationType": "NONE",
+                                "httpMethod": "OPTIONS",
+                                "integration": {
+                                  "type": "MOCK",
+                                  "requestTemplates": {
+                                    "application/json": "{ statusCode: 200 }"
+                                  },
+                                  "integrationResponses": [
+                                    {
+                                      "statusCode": "204",
+                                      "responseParameters": {
+                                        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+                                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                                        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+                                      }
+                                    }
+                                  ]
+                                },
+                                "methodResponses": [
+                                  {
+                                    "statusCode": "204",
+                                    "responseParameters": {
+                                      "method.response.header.Access-Control-Allow-Headers": true,
+                                      "method.response.header.Access-Control-Allow-Origin": true,
+                                      "method.response.header.Access-Control-Allow-Methods": true
+                                    }
+                                  }
+                                ],
+                                "resourceId": {
+                                  "Ref": "RateLockApihealthE1EF5186"
+                                },
+                                "restApiId": {
+                                  "Ref": "RateLockApi885D4D79"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                              "version": "2.110.1"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                          "version": "2.110.1"
+                        }
+                      },
+                      "GET": {
+                        "id": "GET",
+                        "path": "RateLock-Dev-Api/RateLockApi/Default/health/GET",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "RateLock-Dev-Api/RateLockApi/Default/health/GET/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                              "aws:cdk:cloudformation:props": {
+                                "authorizationType": "NONE",
+                                "httpMethod": "GET",
+                                "integration": {
+                                  "type": "HTTP_PROXY",
+                                  "uri": {
+                                    "Fn::Join": [
+                                      "",
+                                      [
+                                        "http://",
+                                        {
+                                          "Fn::ImportValue": "RateLock-Dev-Compute-LoadBalancerDNS"
+                                        },
+                                        "/health"
+                                      ]
+                                    ]
+                                  },
+                                  "integrationHttpMethod": "GET"
+                                },
+                                "methodResponses": [
+                                  {
+                                    "statusCode": "200",
+                                    "responseModels": {
+                                      "application/json": "Empty"
+                                    }
+                                  }
+                                ],
+                                "resourceId": {
+                                  "Ref": "RateLockApihealthE1EF5186"
+                                },
+                                "restApiId": {
+                                  "Ref": "RateLockApi885D4D79"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                              "version": "2.110.1"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                          "version": "2.110.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigateway.Resource",
+                      "version": "2.110.1"
+                    }
+                  },
+                  "v1": {
+                    "id": "v1",
+                    "path": "RateLock-Dev-Api/RateLockApi/Default/v1",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "RateLock-Dev-Api/RateLockApi/Default/v1/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::ApiGateway::Resource",
+                          "aws:cdk:cloudformation:props": {
+                            "parentId": {
+                              "Fn::GetAtt": [
+                                "RateLockApi885D4D79",
+                                "RootResourceId"
+                              ]
+                            },
+                            "pathPart": "v1",
+                            "restApiId": {
+                              "Ref": "RateLockApi885D4D79"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.CfnResource",
+                          "version": "2.110.1"
+                        }
+                      },
+                      "OPTIONS": {
+                        "id": "OPTIONS",
+                        "path": "RateLock-Dev-Api/RateLockApi/Default/v1/OPTIONS",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "RateLock-Dev-Api/RateLockApi/Default/v1/OPTIONS/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                              "aws:cdk:cloudformation:props": {
+                                "apiKeyRequired": false,
+                                "authorizationType": "NONE",
+                                "httpMethod": "OPTIONS",
+                                "integration": {
+                                  "type": "MOCK",
+                                  "requestTemplates": {
+                                    "application/json": "{ statusCode: 200 }"
+                                  },
+                                  "integrationResponses": [
+                                    {
+                                      "statusCode": "204",
+                                      "responseParameters": {
+                                        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+                                        "method.response.header.Access-Control-Allow-Origin": "'*'",
+                                        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+                                      }
+                                    }
+                                  ]
+                                },
+                                "methodResponses": [
+                                  {
+                                    "statusCode": "204",
+                                    "responseParameters": {
+                                      "method.response.header.Access-Control-Allow-Headers": true,
+                                      "method.response.header.Access-Control-Allow-Origin": true,
+                                      "method.response.header.Access-Control-Allow-Methods": true
+                                    }
+                                  }
+                                ],
+                                "resourceId": {
+                                  "Ref": "RateLockApiv188AD70FD"
+                                },
+                                "restApiId": {
+                                  "Ref": "RateLockApi885D4D79"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                              "version": "2.110.1"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                          "version": "2.110.1"
+                        }
+                      },
+                      "convert": {
+                        "id": "convert",
+                        "path": "RateLock-Dev-Api/RateLockApi/Default/v1/convert",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "RateLock-Dev-Api/RateLockApi/Default/v1/convert/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::ApiGateway::Resource",
+                              "aws:cdk:cloudformation:props": {
+                                "parentId": {
+                                  "Ref": "RateLockApiv188AD70FD"
+                                },
+                                "pathPart": "convert",
+                                "restApiId": {
+                                  "Ref": "RateLockApi885D4D79"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.CfnResource",
+                              "version": "2.110.1"
+                            }
+                          },
+                          "OPTIONS": {
+                            "id": "OPTIONS",
+                            "path": "RateLock-Dev-Api/RateLockApi/Default/v1/convert/OPTIONS",
+                            "children": {
+                              "Resource": {
+                                "id": "Resource",
+                                "path": "RateLock-Dev-Api/RateLockApi/Default/v1/convert/OPTIONS/Resource",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                                  "aws:cdk:cloudformation:props": {
+                                    "apiKeyRequired": false,
+                                    "authorizationType": "NONE",
+                                    "httpMethod": "OPTIONS",
+                                    "integration": {
+                                      "type": "MOCK",
+                                      "requestTemplates": {
+                                        "application/json": "{ statusCode: 200 }"
+                                      },
+                                      "integrationResponses": [
+                                        {
+                                          "statusCode": "204",
+                                          "responseParameters": {
+                                            "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+                                            "method.response.header.Access-Control-Allow-Origin": "'*'",
+                                            "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "methodResponses": [
+                                      {
+                                        "statusCode": "204",
+                                        "responseParameters": {
+                                          "method.response.header.Access-Control-Allow-Headers": true,
+                                          "method.response.header.Access-Control-Allow-Origin": true,
+                                          "method.response.header.Access-Control-Allow-Methods": true
+                                        }
+                                      }
+                                    ],
+                                    "resourceId": {
+                                      "Ref": "RateLockApiv1convertE9D67B2A"
+                                    },
+                                    "restApiId": {
+                                      "Ref": "RateLockApi885D4D79"
+                                    }
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                                  "version": "2.110.1"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                              "version": "2.110.1"
+                            }
+                          },
+                          "GET": {
+                            "id": "GET",
+                            "path": "RateLock-Dev-Api/RateLockApi/Default/v1/convert/GET",
+                            "children": {
+                              "Resource": {
+                                "id": "Resource",
+                                "path": "RateLock-Dev-Api/RateLockApi/Default/v1/convert/GET/Resource",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                                  "aws:cdk:cloudformation:props": {
+                                    "authorizationType": "NONE",
+                                    "httpMethod": "GET",
+                                    "integration": {
+                                      "type": "HTTP_PROXY",
+                                      "uri": {
+                                        "Fn::Join": [
+                                          "",
+                                          [
+                                            "http://",
+                                            {
+                                              "Fn::ImportValue": "RateLock-Dev-Compute-LoadBalancerDNS"
+                                            },
+                                            "/v1/convert"
+                                          ]
+                                        ]
+                                      },
+                                      "integrationHttpMethod": "GET",
+                                      "requestParameters": {
+                                        "integration.request.querystring.from": "method.request.querystring.from",
+                                        "integration.request.querystring.to": "method.request.querystring.to",
+                                        "integration.request.querystring.amount": "method.request.querystring.amount"
+                                      }
+                                    },
+                                    "methodResponses": [
+                                      {
+                                        "statusCode": "200",
+                                        "responseModels": {
+                                          "application/json": "Empty"
+                                        }
+                                      },
+                                      {
+                                        "statusCode": "400"
+                                      },
+                                      {
+                                        "statusCode": "503"
+                                      }
+                                    ],
+                                    "requestParameters": {
+                                      "method.request.querystring.from": true,
+                                      "method.request.querystring.to": true,
+                                      "method.request.querystring.amount": true
+                                    },
+                                    "resourceId": {
+                                      "Ref": "RateLockApiv1convertE9D67B2A"
+                                    },
+                                    "restApiId": {
+                                      "Ref": "RateLockApi885D4D79"
+                                    }
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                                  "version": "2.110.1"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                              "version": "2.110.1"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.Resource",
+                          "version": "2.110.1"
+                        }
+                      },
+                      "audit": {
+                        "id": "audit",
+                        "path": "RateLock-Dev-Api/RateLockApi/Default/v1/audit",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "RateLock-Dev-Api/RateLockApi/Default/v1/audit/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::ApiGateway::Resource",
+                              "aws:cdk:cloudformation:props": {
+                                "parentId": {
+                                  "Ref": "RateLockApiv188AD70FD"
+                                },
+                                "pathPart": "audit",
+                                "restApiId": {
+                                  "Ref": "RateLockApi885D4D79"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.CfnResource",
+                              "version": "2.110.1"
+                            }
+                          },
+                          "OPTIONS": {
+                            "id": "OPTIONS",
+                            "path": "RateLock-Dev-Api/RateLockApi/Default/v1/audit/OPTIONS",
+                            "children": {
+                              "Resource": {
+                                "id": "Resource",
+                                "path": "RateLock-Dev-Api/RateLockApi/Default/v1/audit/OPTIONS/Resource",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                                  "aws:cdk:cloudformation:props": {
+                                    "apiKeyRequired": false,
+                                    "authorizationType": "NONE",
+                                    "httpMethod": "OPTIONS",
+                                    "integration": {
+                                      "type": "MOCK",
+                                      "requestTemplates": {
+                                        "application/json": "{ statusCode: 200 }"
+                                      },
+                                      "integrationResponses": [
+                                        {
+                                          "statusCode": "204",
+                                          "responseParameters": {
+                                            "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+                                            "method.response.header.Access-Control-Allow-Origin": "'*'",
+                                            "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "methodResponses": [
+                                      {
+                                        "statusCode": "204",
+                                        "responseParameters": {
+                                          "method.response.header.Access-Control-Allow-Headers": true,
+                                          "method.response.header.Access-Control-Allow-Origin": true,
+                                          "method.response.header.Access-Control-Allow-Methods": true
+                                        }
+                                      }
+                                    ],
+                                    "resourceId": {
+                                      "Ref": "RateLockApiv1audit00F1A224"
+                                    },
+                                    "restApiId": {
+                                      "Ref": "RateLockApi885D4D79"
+                                    }
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                                  "version": "2.110.1"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                              "version": "2.110.1"
+                            }
+                          },
+                          "{transaction_id}": {
+                            "id": "{transaction_id}",
+                            "path": "RateLock-Dev-Api/RateLockApi/Default/v1/audit/{transaction_id}",
+                            "children": {
+                              "Resource": {
+                                "id": "Resource",
+                                "path": "RateLock-Dev-Api/RateLockApi/Default/v1/audit/{transaction_id}/Resource",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::ApiGateway::Resource",
+                                  "aws:cdk:cloudformation:props": {
+                                    "parentId": {
+                                      "Ref": "RateLockApiv1audit00F1A224"
+                                    },
+                                    "pathPart": "{transaction_id}",
+                                    "restApiId": {
+                                      "Ref": "RateLockApi885D4D79"
+                                    }
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_apigateway.CfnResource",
+                                  "version": "2.110.1"
+                                }
+                              },
+                              "OPTIONS": {
+                                "id": "OPTIONS",
+                                "path": "RateLock-Dev-Api/RateLockApi/Default/v1/audit/{transaction_id}/OPTIONS",
+                                "children": {
+                                  "Resource": {
+                                    "id": "Resource",
+                                    "path": "RateLock-Dev-Api/RateLockApi/Default/v1/audit/{transaction_id}/OPTIONS/Resource",
+                                    "attributes": {
+                                      "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                                      "aws:cdk:cloudformation:props": {
+                                        "apiKeyRequired": false,
+                                        "authorizationType": "NONE",
+                                        "httpMethod": "OPTIONS",
+                                        "integration": {
+                                          "type": "MOCK",
+                                          "requestTemplates": {
+                                            "application/json": "{ statusCode: 200 }"
+                                          },
+                                          "integrationResponses": [
+                                            {
+                                              "statusCode": "204",
+                                              "responseParameters": {
+                                                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+                                                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                                                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+                                              }
+                                            }
+                                          ]
+                                        },
+                                        "methodResponses": [
+                                          {
+                                            "statusCode": "204",
+                                            "responseParameters": {
+                                              "method.response.header.Access-Control-Allow-Headers": true,
+                                              "method.response.header.Access-Control-Allow-Origin": true,
+                                              "method.response.header.Access-Control-Allow-Methods": true
+                                            }
+                                          }
+                                        ],
+                                        "resourceId": {
+                                          "Ref": "RateLockApiv1audittransactionid8D0449C2"
+                                        },
+                                        "restApiId": {
+                                          "Ref": "RateLockApi885D4D79"
+                                        }
+                                      }
+                                    },
+                                    "constructInfo": {
+                                      "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                                      "version": "2.110.1"
+                                    }
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                                  "version": "2.110.1"
+                                }
+                              },
+                              "GET": {
+                                "id": "GET",
+                                "path": "RateLock-Dev-Api/RateLockApi/Default/v1/audit/{transaction_id}/GET",
+                                "children": {
+                                  "Resource": {
+                                    "id": "Resource",
+                                    "path": "RateLock-Dev-Api/RateLockApi/Default/v1/audit/{transaction_id}/GET/Resource",
+                                    "attributes": {
+                                      "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                                      "aws:cdk:cloudformation:props": {
+                                        "authorizationType": "NONE",
+                                        "httpMethod": "GET",
+                                        "integration": {
+                                          "type": "HTTP_PROXY",
+                                          "uri": {
+                                            "Fn::Join": [
+                                              "",
+                                              [
+                                                "http://",
+                                                {
+                                                  "Fn::ImportValue": "RateLock-Dev-Compute-LoadBalancerDNS"
+                                                },
+                                                "/v1/audit/{transaction_id}"
+                                              ]
+                                            ]
+                                          },
+                                          "integrationHttpMethod": "GET",
+                                          "requestParameters": {
+                                            "integration.request.path.transaction_id": "method.request.path.transaction_id"
+                                          }
+                                        },
+                                        "methodResponses": [
+                                          {
+                                            "statusCode": "200",
+                                            "responseModels": {
+                                              "application/json": "Empty"
+                                            }
+                                          },
+                                          {
+                                            "statusCode": "404"
+                                          }
+                                        ],
+                                        "requestParameters": {
+                                          "method.request.path.transaction_id": true
+                                        },
+                                        "resourceId": {
+                                          "Ref": "RateLockApiv1audittransactionid8D0449C2"
+                                        },
+                                        "restApiId": {
+                                          "Ref": "RateLockApi885D4D79"
+                                        }
+                                      }
+                                    },
+                                    "constructInfo": {
+                                      "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                                      "version": "2.110.1"
+                                    }
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                                  "version": "2.110.1"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.Resource",
+                              "version": "2.110.1"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.Resource",
+                          "version": "2.110.1"
+                        }
+                      },
+                      "rates": {
+                        "id": "rates",
+                        "path": "RateLock-Dev-Api/RateLockApi/Default/v1/rates",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "RateLock-Dev-Api/RateLockApi/Default/v1/rates/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::ApiGateway::Resource",
+                              "aws:cdk:cloudformation:props": {
+                                "parentId": {
+                                  "Ref": "RateLockApiv188AD70FD"
+                                },
+                                "pathPart": "rates",
+                                "restApiId": {
+                                  "Ref": "RateLockApi885D4D79"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.CfnResource",
+                              "version": "2.110.1"
+                            }
+                          },
+                          "OPTIONS": {
+                            "id": "OPTIONS",
+                            "path": "RateLock-Dev-Api/RateLockApi/Default/v1/rates/OPTIONS",
+                            "children": {
+                              "Resource": {
+                                "id": "Resource",
+                                "path": "RateLock-Dev-Api/RateLockApi/Default/v1/rates/OPTIONS/Resource",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                                  "aws:cdk:cloudformation:props": {
+                                    "apiKeyRequired": false,
+                                    "authorizationType": "NONE",
+                                    "httpMethod": "OPTIONS",
+                                    "integration": {
+                                      "type": "MOCK",
+                                      "requestTemplates": {
+                                        "application/json": "{ statusCode: 200 }"
+                                      },
+                                      "integrationResponses": [
+                                        {
+                                          "statusCode": "204",
+                                          "responseParameters": {
+                                            "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+                                            "method.response.header.Access-Control-Allow-Origin": "'*'",
+                                            "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "methodResponses": [
+                                      {
+                                        "statusCode": "204",
+                                        "responseParameters": {
+                                          "method.response.header.Access-Control-Allow-Headers": true,
+                                          "method.response.header.Access-Control-Allow-Origin": true,
+                                          "method.response.header.Access-Control-Allow-Methods": true
+                                        }
+                                      }
+                                    ],
+                                    "resourceId": {
+                                      "Ref": "RateLockApiv1ratesCEADC05A"
+                                    },
+                                    "restApiId": {
+                                      "Ref": "RateLockApi885D4D79"
+                                    }
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                                  "version": "2.110.1"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                              "version": "2.110.1"
+                            }
+                          },
+                          "GET": {
+                            "id": "GET",
+                            "path": "RateLock-Dev-Api/RateLockApi/Default/v1/rates/GET",
+                            "children": {
+                              "Resource": {
+                                "id": "Resource",
+                                "path": "RateLock-Dev-Api/RateLockApi/Default/v1/rates/GET/Resource",
+                                "attributes": {
+                                  "aws:cdk:cloudformation:type": "AWS::ApiGateway::Method",
+                                  "aws:cdk:cloudformation:props": {
+                                    "authorizationType": "NONE",
+                                    "httpMethod": "GET",
+                                    "integration": {
+                                      "type": "HTTP_PROXY",
+                                      "uri": {
+                                        "Fn::Join": [
+                                          "",
+                                          [
+                                            "http://",
+                                            {
+                                              "Fn::ImportValue": "RateLock-Dev-Compute-LoadBalancerDNS"
+                                            },
+                                            "/v1/rates"
+                                          ]
+                                        ]
+                                      },
+                                      "integrationHttpMethod": "GET"
+                                    },
+                                    "methodResponses": [
+                                      {
+                                        "statusCode": "200",
+                                        "responseModels": {
+                                          "application/json": "Empty"
+                                        }
+                                      },
+                                      {
+                                        "statusCode": "503"
+                                      }
+                                    ],
+                                    "resourceId": {
+                                      "Ref": "RateLockApiv1ratesCEADC05A"
+                                    },
+                                    "restApiId": {
+                                      "Ref": "RateLockApi885D4D79"
+                                    }
+                                  }
+                                },
+                                "constructInfo": {
+                                  "fqn": "aws-cdk-lib.aws_apigateway.CfnMethod",
+                                  "version": "2.110.1"
+                                }
+                              }
+                            },
+                            "constructInfo": {
+                              "fqn": "aws-cdk-lib.aws_apigateway.Method",
+                              "version": "2.110.1"
+                            }
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_apigateway.Resource",
+                          "version": "2.110.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_apigateway.Resource",
+                      "version": "2.110.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_apigateway.ResourceBase",
+                  "version": "2.110.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_apigateway.RestApi",
+              "version": "2.110.1"
+            }
+          },
+          "ApiGatewayUrl": {
+            "id": "ApiGatewayUrl",
+            "path": "RateLock-Dev-Api/ApiGatewayUrl",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.110.1"
+            }
+          },
+          "ApiGatewayId": {
+            "id": "ApiGatewayId",
+            "path": "RateLock-Dev-Api/ApiGatewayId",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.110.1"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "RateLock-Dev-Api/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "RateLock-Dev-Api/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.110.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.4.2"
+            }
+          },
+          "BootstrapVersion": {
+            "id": "BootstrapVersion",
+            "path": "RateLock-Dev-Api/BootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnParameter",
+              "version": "2.110.1"
+            }
+          },
+          "CheckBootstrapVersion": {
+            "id": "CheckBootstrapVersion",
+            "path": "RateLock-Dev-Api/CheckBootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnRule",
+              "version": "2.110.1"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.110.1"
+        }
+      },
+      "RateLock-Dev-Frontend": {
+        "id": "RateLock-Dev-Frontend",
+        "path": "RateLock-Dev-Frontend",
+        "children": {
+          "WebsiteBucket": {
+            "id": "WebsiteBucket",
+            "path": "RateLock-Dev-Frontend/WebsiteBucket",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "RateLock-Dev-Frontend/WebsiteBucket/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::S3::Bucket",
+                  "aws:cdk:cloudformation:props": {
+                    "bucketName": "ratelock-frontend-163885031822-us-east-1",
+                    "corsConfiguration": {
+                      "corsRules": [
+                        {
+                          "allowedHeaders": [
+                            "*"
+                          ],
+                          "allowedMethods": [
+                            "GET",
+                            "POST"
+                          ],
+                          "allowedOrigins": [
+                            "*"
+                          ]
+                        }
+                      ]
+                    },
+                    "tags": [
+                      {
+                        "key": "aws-cdk:auto-delete-objects",
+                        "value": "true"
+                      },
+                      {
+                        "key": "aws-cdk:cr-owned:467ec562",
+                        "value": "true"
+                      },
+                      {
+                        "key": "Environment",
+                        "value": "dev"
+                      },
+                      {
+                        "key": "ManagedBy",
+                        "value": "CDK"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "RateLock"
+                      }
+                    ],
+                    "websiteConfiguration": {
+                      "indexDocument": "index.html",
+                      "errorDocument": "error.html"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3.CfnBucket",
+                  "version": "2.110.1"
+                }
+              },
+              "Policy": {
+                "id": "Policy",
+                "path": "RateLock-Dev-Frontend/WebsiteBucket/Policy",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "RateLock-Dev-Frontend/WebsiteBucket/Policy/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::S3::BucketPolicy",
+                      "aws:cdk:cloudformation:props": {
+                        "bucket": {
+                          "Ref": "WebsiteBucket75C24D94"
+                        },
+                        "policyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "s3:GetObject",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "AWS": "*"
+                              },
+                              "Resource": {
+                                "Fn::Join": [
+                                  "",
+                                  [
+                                    {
+                                      "Fn::GetAtt": [
+                                        "WebsiteBucket75C24D94",
+                                        "Arn"
+                                      ]
+                                    },
+                                    "/*"
+                                  ]
+                                ]
+                              }
+                            },
+                            {
+                              "Action": [
+                                "s3:DeleteObject*",
+                                "s3:GetBucket*",
+                                "s3:List*",
+                                "s3:PutBucketPolicy"
+                              ],
+                              "Effect": "Allow",
+                              "Principal": {
+                                "AWS": {
+                                  "Fn::GetAtt": [
+                                    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+                                    "Arn"
+                                  ]
+                                }
+                              },
+                              "Resource": [
+                                {
+                                  "Fn::GetAtt": [
+                                    "WebsiteBucket75C24D94",
+                                    "Arn"
+                                  ]
+                                },
+                                {
+                                  "Fn::Join": [
+                                    "",
+                                    [
+                                      {
+                                        "Fn::GetAtt": [
+                                          "WebsiteBucket75C24D94",
+                                          "Arn"
+                                        ]
+                                      },
+                                      "/*"
+                                    ]
+                                  ]
+                                }
+                              ]
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.CfnBucketPolicy",
+                      "version": "2.110.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3.BucketPolicy",
+                  "version": "2.110.1"
+                }
+              },
+              "AutoDeleteObjectsCustomResource": {
+                "id": "AutoDeleteObjectsCustomResource",
+                "path": "RateLock-Dev-Frontend/WebsiteBucket/AutoDeleteObjectsCustomResource",
+                "children": {
+                  "Default": {
+                    "id": "Default",
+                    "path": "RateLock-Dev-Frontend/WebsiteBucket/AutoDeleteObjectsCustomResource/Default",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.CfnResource",
+                      "version": "2.110.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CustomResource",
+                  "version": "2.110.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_s3.Bucket",
+              "version": "2.110.1"
+            }
+          },
+          "Custom::S3AutoDeleteObjectsCustomResourceProvider": {
+            "id": "Custom::S3AutoDeleteObjectsCustomResourceProvider",
+            "path": "RateLock-Dev-Frontend/Custom::S3AutoDeleteObjectsCustomResourceProvider",
+            "children": {
+              "Staging": {
+                "id": "Staging",
+                "path": "RateLock-Dev-Frontend/Custom::S3AutoDeleteObjectsCustomResourceProvider/Staging",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.AssetStaging",
+                  "version": "2.110.1"
+                }
+              },
+              "Role": {
+                "id": "Role",
+                "path": "RateLock-Dev-Frontend/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.110.1"
+                }
+              },
+              "Handler": {
+                "id": "Handler",
+                "path": "RateLock-Dev-Frontend/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.110.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CustomResourceProvider",
+              "version": "2.110.1"
+            }
+          },
+          "DeployWebsite": {
+            "id": "DeployWebsite",
+            "path": "RateLock-Dev-Frontend/DeployWebsite",
+            "children": {
+              "AwsCliLayer": {
+                "id": "AwsCliLayer",
+                "path": "RateLock-Dev-Frontend/DeployWebsite/AwsCliLayer",
+                "children": {
+                  "Code": {
+                    "id": "Code",
+                    "path": "RateLock-Dev-Frontend/DeployWebsite/AwsCliLayer/Code",
+                    "children": {
+                      "Stage": {
+                        "id": "Stage",
+                        "path": "RateLock-Dev-Frontend/DeployWebsite/AwsCliLayer/Code/Stage",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.AssetStaging",
+                          "version": "2.110.1"
+                        }
+                      },
+                      "AssetBucket": {
+                        "id": "AssetBucket",
+                        "path": "RateLock-Dev-Frontend/DeployWebsite/AwsCliLayer/Code/AssetBucket",
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                          "version": "2.110.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                      "version": "2.110.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "RateLock-Dev-Frontend/DeployWebsite/AwsCliLayer/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::LayerVersion",
+                      "aws:cdk:cloudformation:props": {
+                        "content": {
+                          "s3Bucket": "cdk-hnb659fds-assets-163885031822-us-east-1",
+                          "s3Key": "e4008fbbff5e797e8793a6de0c1d736158ad2ca1f3dbbd4a2cb7efb2fc54f2ad.zip"
+                        },
+                        "description": "/opt/awscli/aws"
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_lambda.CfnLayerVersion",
+                      "version": "2.110.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.lambda_layer_awscli.AwsCliLayer",
+                  "version": "2.110.1"
+                }
+              },
+              "CustomResourceHandler": {
+                "id": "CustomResourceHandler",
+                "path": "RateLock-Dev-Frontend/DeployWebsite/CustomResourceHandler",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.SingletonFunction",
+                  "version": "2.110.1"
+                }
+              },
+              "Asset1": {
+                "id": "Asset1",
+                "path": "RateLock-Dev-Frontend/DeployWebsite/Asset1",
+                "children": {
+                  "Stage": {
+                    "id": "Stage",
+                    "path": "RateLock-Dev-Frontend/DeployWebsite/Asset1/Stage",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.AssetStaging",
+                      "version": "2.110.1"
+                    }
+                  },
+                  "AssetBucket": {
+                    "id": "AssetBucket",
+                    "path": "RateLock-Dev-Frontend/DeployWebsite/Asset1/AssetBucket",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                      "version": "2.110.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                  "version": "2.110.1"
+                }
+              },
+              "CustomResource": {
+                "id": "CustomResource",
+                "path": "RateLock-Dev-Frontend/DeployWebsite/CustomResource",
+                "children": {
+                  "Default": {
+                    "id": "Default",
+                    "path": "RateLock-Dev-Frontend/DeployWebsite/CustomResource/Default",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.CfnResource",
+                      "version": "2.110.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CustomResource",
+                  "version": "2.110.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_s3_deployment.BucketDeployment",
+              "version": "2.110.1"
+            }
+          },
+          "Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C": {
+            "id": "Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C",
+            "path": "RateLock-Dev-Frontend/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C",
+            "children": {
+              "ServiceRole": {
+                "id": "ServiceRole",
+                "path": "RateLock-Dev-Frontend/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole",
+                "children": {
+                  "ImportServiceRole": {
+                    "id": "ImportServiceRole",
+                    "path": "RateLock-Dev-Frontend/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/ImportServiceRole",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.110.1"
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "RateLock-Dev-Frontend/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "managedPolicyArns": [
+                          {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "arn:",
+                                {
+                                  "Ref": "AWS::Partition"
+                                },
+                                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                              ]
+                            ]
+                          }
+                        ],
+                        "tags": [
+                          {
+                            "key": "Environment",
+                            "value": "dev"
+                          },
+                          {
+                            "key": "ManagedBy",
+                            "value": "CDK"
+                          },
+                          {
+                            "key": "Project",
+                            "value": "RateLock"
+                          }
+                        ]
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.110.1"
+                    }
+                  },
+                  "DefaultPolicy": {
+                    "id": "DefaultPolicy",
+                    "path": "RateLock-Dev-Frontend/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/DefaultPolicy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "RateLock-Dev-Frontend/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/DefaultPolicy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                          "aws:cdk:cloudformation:props": {
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": [
+                                    "s3:GetBucket*",
+                                    "s3:GetObject*",
+                                    "s3:List*"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": [
+                                    "arn:aws:s3:::cdk-hnb659fds-assets-163885031822-us-east-1",
+                                    "arn:aws:s3:::cdk-hnb659fds-assets-163885031822-us-east-1/*"
+                                  ]
+                                },
+                                {
+                                  "Action": [
+                                    "s3:Abort*",
+                                    "s3:DeleteObject*",
+                                    "s3:GetBucket*",
+                                    "s3:GetObject*",
+                                    "s3:List*",
+                                    "s3:PutObject",
+                                    "s3:PutObjectLegalHold",
+                                    "s3:PutObjectRetention",
+                                    "s3:PutObjectTagging",
+                                    "s3:PutObjectVersionTagging"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": [
+                                    {
+                                      "Fn::GetAtt": [
+                                        "WebsiteBucket75C24D94",
+                                        "Arn"
+                                      ]
+                                    },
+                                    {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          {
+                                            "Fn::GetAtt": [
+                                              "WebsiteBucket75C24D94",
+                                              "Arn"
+                                            ]
+                                          },
+                                          "/*"
+                                        ]
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "policyName": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF",
+                            "roles": [
+                              {
+                                "Ref": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                          "version": "2.110.1"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Policy",
+                      "version": "2.110.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.110.1"
+                }
+              },
+              "Code": {
+                "id": "Code",
+                "path": "RateLock-Dev-Frontend/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/Code",
+                "children": {
+                  "Stage": {
+                    "id": "Stage",
+                    "path": "RateLock-Dev-Frontend/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/Code/Stage",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.AssetStaging",
+                      "version": "2.110.1"
+                    }
+                  },
+                  "AssetBucket": {
+                    "id": "AssetBucket",
+                    "path": "RateLock-Dev-Frontend/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/Code/AssetBucket",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_s3.BucketBase",
+                      "version": "2.110.1"
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_s3_assets.Asset",
+                  "version": "2.110.1"
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "RateLock-Dev-Frontend/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                  "aws:cdk:cloudformation:props": {
+                    "code": {
+                      "s3Bucket": "cdk-hnb659fds-assets-163885031822-us-east-1",
+                      "s3Key": "0b1f5aa55d045066ed91316b823a808060c12737e0575ab7cefe2335324108b0.zip"
+                    },
+                    "environment": {
+                      "variables": {
+                        "AWS_CA_BUNDLE": "/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem"
+                      }
+                    },
+                    "handler": "index.handler",
+                    "layers": [
+                      {
+                        "Ref": "DeployWebsiteAwsCliLayer17DBC421"
+                      }
+                    ],
+                    "role": {
+                      "Fn::GetAtt": [
+                        "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265",
+                        "Arn"
+                      ]
+                    },
+                    "runtime": "python3.9",
+                    "tags": [
+                      {
+                        "key": "Environment",
+                        "value": "dev"
+                      },
+                      {
+                        "key": "ManagedBy",
+                        "value": "CDK"
+                      },
+                      {
+                        "key": "Project",
+                        "value": "RateLock"
+                      }
+                    ],
+                    "timeout": 900
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_lambda.CfnFunction",
+                  "version": "2.110.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_lambda.Function",
+              "version": "2.110.1"
+            }
+          },
+          "WebsiteUrl": {
+            "id": "WebsiteUrl",
+            "path": "RateLock-Dev-Frontend/WebsiteUrl",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.110.1"
+            }
+          },
+          "WebsiteBucketName": {
+            "id": "WebsiteBucketName",
+            "path": "RateLock-Dev-Frontend/WebsiteBucketName",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnOutput",
+              "version": "2.110.1"
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "RateLock-Dev-Frontend/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "RateLock-Dev-Frontend/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.110.1"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.4.2"
+            }
+          },
+          "BootstrapVersion": {
+            "id": "BootstrapVersion",
+            "path": "RateLock-Dev-Frontend/BootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnParameter",
+              "version": "2.110.1"
+            }
+          },
+          "CheckBootstrapVersion": {
+            "id": "CheckBootstrapVersion",
+            "path": "RateLock-Dev-Frontend/CheckBootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnRule",
+              "version": "2.110.1"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.110.1"
+        }
+      },
+      "Tree": {
+        "id": "Tree",
+        "path": "Tree",
+        "constructInfo": {
+          "fqn": "constructs.Construct",
+          "version": "10.4.2"
+        }
+      }
+    },
+    "constructInfo": {
+      "fqn": "aws-cdk-lib.App",
+      "version": "2.110.1"
+    }
+  }
+}

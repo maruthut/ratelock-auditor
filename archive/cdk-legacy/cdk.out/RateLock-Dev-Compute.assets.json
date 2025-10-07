@@ -1,0 +1,20 @@
+{
+  "version": "35.0.0",
+  "files": {
+    "377cdf683ad7232d64062a88ad7666770dd8f6a71f761d7b893839ffcf29a178": {
+      "source": {
+        "path": "RateLock-Dev-Compute.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "163885031822-us-east-1": {
+          "bucketName": "cdk-hnb659fds-assets-163885031822-us-east-1",
+          "objectKey": "377cdf683ad7232d64062a88ad7666770dd8f6a71f761d7b893839ffcf29a178.json",
+          "region": "us-east-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::163885031822:role/cdk-hnb659fds-file-publishing-role-163885031822-us-east-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

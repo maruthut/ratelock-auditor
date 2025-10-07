@@ -1,0 +1,216 @@
+{
+ "Description": "RateLock DynamoDB tables for dev environment",
+ "Resources": {
+  "RateCacheTable7CBD0DE3": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "RateSnapshotID",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "KeySchema": [
+     {
+      "AttributeName": "RateSnapshotID",
+      "KeyType": "HASH"
+     }
+    ],
+    "PointInTimeRecoverySpecification": {
+     "PointInTimeRecoveryEnabled": false
+    },
+    "TableName": "RateCacheTable",
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "RateLock"
+     }
+    ],
+    "TimeToLiveSpecification": {
+     "AttributeName": "ttl",
+     "Enabled": true
+    }
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "RateLock-Dev-Database/RateCacheTable/Resource"
+   }
+  },
+  "ConversionAuditLogTable3B1E57FF": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "AuditLogTransactionID",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "KeySchema": [
+     {
+      "AttributeName": "AuditLogTransactionID",
+      "KeyType": "HASH"
+     }
+    ],
+    "PointInTimeRecoverySpecification": {
+     "PointInTimeRecoveryEnabled": false
+    },
+    "TableName": "ConversionAuditLogTable",
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "RateLock"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Delete",
+   "DeletionPolicy": "Delete",
+   "Metadata": {
+    "aws:cdk:path": "RateLock-Dev-Database/ConversionAuditLogTable/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/zPSMzQ00DNUTCwv1k1OydbNyUzSqw4uSUzO1kksL45PqcxLzM1PSdKrDklMyknVcU7LAzNqdYJSi/NLi5LBQv6lJQWlJSAWTLRWJ6CyJCM/T99Yz9BQz1QxqzgzU7eoNK8kMzdVLwhCAwAltsKgewAAAA=="
+   },
+   "Metadata": {
+    "aws:cdk:path": "RateLock-Dev-Database/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "RateCacheTableName": {
+   "Description": "Name of the Rate Cache DynamoDB table",
+   "Value": {
+    "Ref": "RateCacheTable7CBD0DE3"
+   },
+   "Export": {
+    "Name": "RateLock-RateCacheTableName"
+   }
+  },
+  "RateCacheTableArn": {
+   "Description": "ARN of the Rate Cache DynamoDB table",
+   "Value": {
+    "Fn::GetAtt": [
+     "RateCacheTable7CBD0DE3",
+     "Arn"
+    ]
+   },
+   "Export": {
+    "Name": "RateLock-RateCacheTableArn"
+   }
+  },
+  "AuditLogTableName": {
+   "Description": "Name of the Audit Log DynamoDB table",
+   "Value": {
+    "Ref": "ConversionAuditLogTable3B1E57FF"
+   },
+   "Export": {
+    "Name": "RateLock-AuditLogTableName"
+   }
+  },
+  "AuditLogTableArn": {
+   "Description": "ARN of the Audit Log DynamoDB table",
+   "Value": {
+    "Fn::GetAtt": [
+     "ConversionAuditLogTable3B1E57FF",
+     "Arn"
+    ]
+   },
+   "Export": {
+    "Name": "RateLock-AuditLogTableArn"
+   }
+  },
+  "ExportsOutputFnGetAttRateCacheTable7CBD0DE3Arn69888416": {
+   "Value": {
+    "Fn::GetAtt": [
+     "RateCacheTable7CBD0DE3",
+     "Arn"
+    ]
+   },
+   "Export": {
+    "Name": "RateLock-Dev-Database:ExportsOutputFnGetAttRateCacheTable7CBD0DE3Arn69888416"
+   }
+  },
+  "ExportsOutputFnGetAttConversionAuditLogTable3B1E57FFArn30528F82": {
+   "Value": {
+    "Fn::GetAtt": [
+     "ConversionAuditLogTable3B1E57FF",
+     "Arn"
+    ]
+   },
+   "Export": {
+    "Name": "RateLock-Dev-Database:ExportsOutputFnGetAttConversionAuditLogTable3B1E57FFArn30528F82"
+   }
+  },
+  "ExportsOutputRefRateCacheTable7CBD0DE31C90AEF1": {
+   "Value": {
+    "Ref": "RateCacheTable7CBD0DE3"
+   },
+   "Export": {
+    "Name": "RateLock-Dev-Database:ExportsOutputRefRateCacheTable7CBD0DE31C90AEF1"
+   }
+  },
+  "ExportsOutputRefConversionAuditLogTable3B1E57FF533AF931": {
+   "Value": {
+    "Ref": "ConversionAuditLogTable3B1E57FF"
+   },
+   "Export": {
+    "Name": "RateLock-Dev-Database:ExportsOutputRefConversionAuditLogTable3B1E57FF533AF931"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

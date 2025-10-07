@@ -256,7 +256,7 @@ class ComputeStack(Stack):
             self, "LoadBalancerDNS",
             value=self.alb.load_balancer_dns_name,
             description="DNS name of the Application Load Balancer",
-            export_name="RateLock-LoadBalancerDNS"
+            export_name=f"{Stack.of(self).stack_name}-LoadBalancerDNS"
         )
 
         CfnOutput(

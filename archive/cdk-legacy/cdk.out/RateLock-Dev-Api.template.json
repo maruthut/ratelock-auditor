@@ -1,0 +1,898 @@
+{
+ "Description": "RateLock API Gateway for dev environment",
+ "Resources": {
+  "ApiGatewayLogs22899D9B": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "LogGroupName": "/aws/apigateway/ratelock-api",
+    "RetentionInDays": 7,
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "RateLock"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "RateLock-Dev-Api/ApiGatewayLogs/Resource"
+   }
+  },
+  "RateLockApi885D4D79": {
+   "Type": "AWS::ApiGateway::RestApi",
+   "Properties": {
+    "Description": "RateLock auditable currency conversion API",
+    "EndpointConfiguration": {
+     "Types": [
+      "REGIONAL"
+     ]
+    },
+    "Name": "ratelock-api",
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "RateLock"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "RateLock-Dev-Api/RateLockApi/Resource"
+   }
+  },
+  "RateLockApiCloudWatchRole0B15FB2D": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "apigateway.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
+       ]
+      ]
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "RateLock"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "RateLock-Dev-Api/RateLockApi/CloudWatchRole/Resource"
+   }
+  },
+  "RateLockApiAccount455DEE8B": {
+   "Type": "AWS::ApiGateway::Account",
+   "Properties": {
+    "CloudWatchRoleArn": {
+     "Fn::GetAtt": [
+      "RateLockApiCloudWatchRole0B15FB2D",
+      "Arn"
+     ]
+    }
+   },
+   "DependsOn": [
+    "RateLockApi885D4D79"
+   ],
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "RateLock-Dev-Api/RateLockApi/Account"
+   }
+  },
+  "RateLockApiDeployment21BDBFEA8843430a8219e0d2ab915f6f9f3551a6": {
+   "Type": "AWS::ApiGateway::Deployment",
+   "Properties": {
+    "Description": "RateLock auditable currency conversion API",
+    "RestApiId": {
+     "Ref": "RateLockApi885D4D79"
+    }
+   },
+   "DependsOn": [
+    "RateLockApihealthGETACE5F83B",
+    "RateLockApihealthOPTIONS14E95E71",
+    "RateLockApihealthE1EF5186",
+    "RateLockApiOPTIONS54CDE604",
+    "RateLockApiv1audittransactionidGET60942EBE",
+    "RateLockApiv1audittransactionidOPTIONSB5BA6852",
+    "RateLockApiv1audittransactionid8D0449C2",
+    "RateLockApiv1auditOPTIONSF49667B3",
+    "RateLockApiv1audit00F1A224",
+    "RateLockApiv1convertGET1B026C9F",
+    "RateLockApiv1convertOPTIONS907C180B",
+    "RateLockApiv1convertE9D67B2A",
+    "RateLockApiv1OPTIONS9E21B234",
+    "RateLockApiv1ratesGETE045A025",
+    "RateLockApiv1ratesOPTIONSBE1C6D9A",
+    "RateLockApiv1ratesCEADC05A",
+    "RateLockApiv188AD70FD"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "RateLock-Dev-Api/RateLockApi/Deployment/Resource"
+   }
+  },
+  "RateLockApiDeploymentStagev15BB35BE8": {
+   "Type": "AWS::ApiGateway::Stage",
+   "Properties": {
+    "AccessLogSetting": {
+     "DestinationArn": {
+      "Fn::GetAtt": [
+       "ApiGatewayLogs22899D9B",
+       "Arn"
+      ]
+     },
+     "Format": "$context.identity.sourceIp $context.identity.caller $context.identity.user [$context.requestTime] \"$context.httpMethod $context.resourcePath $context.protocol\" $context.status $context.responseLength $context.requestId"
+    },
+    "DeploymentId": {
+     "Ref": "RateLockApiDeployment21BDBFEA8843430a8219e0d2ab915f6f9f3551a6"
+    },
+    "MethodSettings": [
+     {
+      "DataTraceEnabled": true,
+      "HttpMethod": "*",
+      "LoggingLevel": "INFO",
+      "MetricsEnabled": true,
+      "ResourcePath": "/*"
+     }
+    ],
+    "RestApiId": {
+     "Ref": "RateLockApi885D4D79"
+    },
+    "StageName": "v1",
+    "Tags": [
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "CDK"
+     },
+     {
+      "Key": "Project",
+      "Value": "RateLock"
+     }
+    ],
+    "TracingEnabled": false
+   },
+   "DependsOn": [
+    "RateLockApiAccount455DEE8B"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "RateLock-Dev-Api/RateLockApi/DeploymentStage.v1/Resource"
+   }
+  },
+  "RateLockApiOPTIONS54CDE604": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Fn::GetAtt": [
+      "RateLockApi885D4D79",
+      "RootResourceId"
+     ]
+    },
+    "RestApiId": {
+     "Ref": "RateLockApi885D4D79"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "RateLock-Dev-Api/RateLockApi/Default/OPTIONS/Resource"
+   }
+  },
+  "RateLockApihealthE1EF5186": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Fn::GetAtt": [
+      "RateLockApi885D4D79",
+      "RootResourceId"
+     ]
+    },
+    "PathPart": "health",
+    "RestApiId": {
+     "Ref": "RateLockApi885D4D79"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "RateLock-Dev-Api/RateLockApi/Default/health/Resource"
+   }
+  },
+  "RateLockApihealthOPTIONS14E95E71": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "RateLockApihealthE1EF5186"
+    },
+    "RestApiId": {
+     "Ref": "RateLockApi885D4D79"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "RateLock-Dev-Api/RateLockApi/Default/health/OPTIONS/Resource"
+   }
+  },
+  "RateLockApihealthGETACE5F83B": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "GET",
+     "Type": "HTTP_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "http://",
+        {
+         "Fn::ImportValue": "RateLock-Dev-Compute-LoadBalancerDNS"
+        },
+        "/health"
+       ]
+      ]
+     }
+    },
+    "MethodResponses": [
+     {
+      "ResponseModels": {
+       "application/json": "Empty"
+      },
+      "StatusCode": "200"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "RateLockApihealthE1EF5186"
+    },
+    "RestApiId": {
+     "Ref": "RateLockApi885D4D79"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "RateLock-Dev-Api/RateLockApi/Default/health/GET/Resource"
+   }
+  },
+  "RateLockApiv188AD70FD": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Fn::GetAtt": [
+      "RateLockApi885D4D79",
+      "RootResourceId"
+     ]
+    },
+    "PathPart": "v1",
+    "RestApiId": {
+     "Ref": "RateLockApi885D4D79"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "RateLock-Dev-Api/RateLockApi/Default/v1/Resource"
+   }
+  },
+  "RateLockApiv1OPTIONS9E21B234": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "RateLockApiv188AD70FD"
+    },
+    "RestApiId": {
+     "Ref": "RateLockApi885D4D79"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "RateLock-Dev-Api/RateLockApi/Default/v1/OPTIONS/Resource"
+   }
+  },
+  "RateLockApiv1convertE9D67B2A": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "RateLockApiv188AD70FD"
+    },
+    "PathPart": "convert",
+    "RestApiId": {
+     "Ref": "RateLockApi885D4D79"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "RateLock-Dev-Api/RateLockApi/Default/v1/convert/Resource"
+   }
+  },
+  "RateLockApiv1convertOPTIONS907C180B": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "RateLockApiv1convertE9D67B2A"
+    },
+    "RestApiId": {
+     "Ref": "RateLockApi885D4D79"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "RateLock-Dev-Api/RateLockApi/Default/v1/convert/OPTIONS/Resource"
+   }
+  },
+  "RateLockApiv1convertGET1B026C9F": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "GET",
+     "RequestParameters": {
+      "integration.request.querystring.from": "method.request.querystring.from",
+      "integration.request.querystring.to": "method.request.querystring.to",
+      "integration.request.querystring.amount": "method.request.querystring.amount"
+     },
+     "Type": "HTTP_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "http://",
+        {
+         "Fn::ImportValue": "RateLock-Dev-Compute-LoadBalancerDNS"
+        },
+        "/v1/convert"
+       ]
+      ]
+     }
+    },
+    "MethodResponses": [
+     {
+      "ResponseModels": {
+       "application/json": "Empty"
+      },
+      "StatusCode": "200"
+     },
+     {
+      "StatusCode": "400"
+     },
+     {
+      "StatusCode": "503"
+     }
+    ],
+    "RequestParameters": {
+     "method.request.querystring.from": true,
+     "method.request.querystring.to": true,
+     "method.request.querystring.amount": true
+    },
+    "ResourceId": {
+     "Ref": "RateLockApiv1convertE9D67B2A"
+    },
+    "RestApiId": {
+     "Ref": "RateLockApi885D4D79"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "RateLock-Dev-Api/RateLockApi/Default/v1/convert/GET/Resource"
+   }
+  },
+  "RateLockApiv1audit00F1A224": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "RateLockApiv188AD70FD"
+    },
+    "PathPart": "audit",
+    "RestApiId": {
+     "Ref": "RateLockApi885D4D79"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "RateLock-Dev-Api/RateLockApi/Default/v1/audit/Resource"
+   }
+  },
+  "RateLockApiv1auditOPTIONSF49667B3": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "RateLockApiv1audit00F1A224"
+    },
+    "RestApiId": {
+     "Ref": "RateLockApi885D4D79"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "RateLock-Dev-Api/RateLockApi/Default/v1/audit/OPTIONS/Resource"
+   }
+  },
+  "RateLockApiv1audittransactionid8D0449C2": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "RateLockApiv1audit00F1A224"
+    },
+    "PathPart": "{transaction_id}",
+    "RestApiId": {
+     "Ref": "RateLockApi885D4D79"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "RateLock-Dev-Api/RateLockApi/Default/v1/audit/{transaction_id}/Resource"
+   }
+  },
+  "RateLockApiv1audittransactionidOPTIONSB5BA6852": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "RateLockApiv1audittransactionid8D0449C2"
+    },
+    "RestApiId": {
+     "Ref": "RateLockApi885D4D79"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "RateLock-Dev-Api/RateLockApi/Default/v1/audit/{transaction_id}/OPTIONS/Resource"
+   }
+  },
+  "RateLockApiv1audittransactionidGET60942EBE": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "GET",
+     "RequestParameters": {
+      "integration.request.path.transaction_id": "method.request.path.transaction_id"
+     },
+     "Type": "HTTP_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "http://",
+        {
+         "Fn::ImportValue": "RateLock-Dev-Compute-LoadBalancerDNS"
+        },
+        "/v1/audit/{transaction_id}"
+       ]
+      ]
+     }
+    },
+    "MethodResponses": [
+     {
+      "ResponseModels": {
+       "application/json": "Empty"
+      },
+      "StatusCode": "200"
+     },
+     {
+      "StatusCode": "404"
+     }
+    ],
+    "RequestParameters": {
+     "method.request.path.transaction_id": true
+    },
+    "ResourceId": {
+     "Ref": "RateLockApiv1audittransactionid8D0449C2"
+    },
+    "RestApiId": {
+     "Ref": "RateLockApi885D4D79"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "RateLock-Dev-Api/RateLockApi/Default/v1/audit/{transaction_id}/GET/Resource"
+   }
+  },
+  "RateLockApiv1ratesCEADC05A": {
+   "Type": "AWS::ApiGateway::Resource",
+   "Properties": {
+    "ParentId": {
+     "Ref": "RateLockApiv188AD70FD"
+    },
+    "PathPart": "rates",
+    "RestApiId": {
+     "Ref": "RateLockApi885D4D79"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "RateLock-Dev-Api/RateLockApi/Default/v1/rates/Resource"
+   }
+  },
+  "RateLockApiv1ratesOPTIONSBE1C6D9A": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "ApiKeyRequired": false,
+    "AuthorizationType": "NONE",
+    "HttpMethod": "OPTIONS",
+    "Integration": {
+     "IntegrationResponses": [
+      {
+       "ResponseParameters": {
+        "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'",
+        "method.response.header.Access-Control-Allow-Origin": "'*'",
+        "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'"
+       },
+       "StatusCode": "204"
+      }
+     ],
+     "RequestTemplates": {
+      "application/json": "{ statusCode: 200 }"
+     },
+     "Type": "MOCK"
+    },
+    "MethodResponses": [
+     {
+      "ResponseParameters": {
+       "method.response.header.Access-Control-Allow-Headers": true,
+       "method.response.header.Access-Control-Allow-Origin": true,
+       "method.response.header.Access-Control-Allow-Methods": true
+      },
+      "StatusCode": "204"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "RateLockApiv1ratesCEADC05A"
+    },
+    "RestApiId": {
+     "Ref": "RateLockApi885D4D79"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "RateLock-Dev-Api/RateLockApi/Default/v1/rates/OPTIONS/Resource"
+   }
+  },
+  "RateLockApiv1ratesGETE045A025": {
+   "Type": "AWS::ApiGateway::Method",
+   "Properties": {
+    "AuthorizationType": "NONE",
+    "HttpMethod": "GET",
+    "Integration": {
+     "IntegrationHttpMethod": "GET",
+     "Type": "HTTP_PROXY",
+     "Uri": {
+      "Fn::Join": [
+       "",
+       [
+        "http://",
+        {
+         "Fn::ImportValue": "RateLock-Dev-Compute-LoadBalancerDNS"
+        },
+        "/v1/rates"
+       ]
+      ]
+     }
+    },
+    "MethodResponses": [
+     {
+      "ResponseModels": {
+       "application/json": "Empty"
+      },
+      "StatusCode": "200"
+     },
+     {
+      "StatusCode": "503"
+     }
+    ],
+    "ResourceId": {
+     "Ref": "RateLockApiv1ratesCEADC05A"
+    },
+    "RestApiId": {
+     "Ref": "RateLockApi885D4D79"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "RateLock-Dev-Api/RateLockApi/Default/v1/rates/GET/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/1WN0W7CMAxFv4X31CygfUABiZdNoPYDJi94JTSNo8ZRVUX9d9QVJHjy8bnX8ga0/gC9wiEW5tIWzv5CrgVNq3CIP9lxEyF/cXPsOQW1//NPnhQG26DQgCPkiqKUwc6FFyyN4eRFHSg4HjvyMtuXrRZsaHYLVBQ59YZ2GEl9k1z5MocPeqaPJ/88KYsd5IrdotnRNL01T0lCkveb8yhX9ustaA2fq1u0tuiTF9sRVMu8AzBLfk4YAQAA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "RateLock-Dev-Api/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "RateLockApiEndpointACA22DBB": {
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "RateLockApi885D4D79"
+      },
+      ".execute-api.us-east-1.",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "RateLockApiDeploymentStagev15BB35BE8"
+      },
+      "/"
+     ]
+    ]
+   }
+  },
+  "ApiGatewayUrl": {
+   "Description": "URL of the API Gateway",
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "https://",
+      {
+       "Ref": "RateLockApi885D4D79"
+      },
+      ".execute-api.us-east-1.",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/",
+      {
+       "Ref": "RateLockApiDeploymentStagev15BB35BE8"
+      },
+      "/"
+     ]
+    ]
+   },
+   "Export": {
+    "Name": "RateLock-ApiGatewayUrl"
+   }
+  },
+  "ApiGatewayId": {
+   "Description": "ID of the API Gateway",
+   "Value": {
+    "Ref": "RateLockApi885D4D79"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

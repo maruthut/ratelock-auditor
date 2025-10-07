@@ -53,11 +53,6 @@ class FrontendStack(Stack):
             ],
             destination_bucket=self.website_bucket,
             
-            # Inject API Gateway URL into the frontend
-            substitutions={
-                "{{API_BASE_URL}}": self.api_url.rstrip('/')
-            },
-            
             # Cache settings
             cache_control=[
                 s3deploy.CacheControl.max_age(Duration.hours(1))

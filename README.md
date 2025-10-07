@@ -129,31 +129,64 @@ The `rate_snapshot_id` in the audit log permanently links each conversion to the
 ### Prerequisites
 - AWS Account with appropriate permissions
 - Docker for containerization
-- Terraform or CloudFormation for infrastructure
+- **Terraform** >= 1.0 for infrastructure deployment
+- **PowerShell** for deployment automation scripts
 
-### Local Development
+### 🏗️ AWS Infrastructure Deployment (Terraform)
+
+The project includes a complete Terraform Infrastructure as Code solution for reliable, repeatable deployments:
+
+```powershell
+# Quick deployment to AWS
+cd terraform
+.\scripts\deploy.ps1 -Environment dev
+
+# Check deployment status
+.\scripts\status.ps1 -Environment dev
+
+# When done, clean up resources
+.\scripts\destroy.ps1 -Environment dev
+```
+
+**What gets deployed:**
+- ✅ **DynamoDB Tables**: RateCacheTable and ConversionAuditLogTable
+- ✅ **ECS Fargate Cluster**: Container orchestration
+- ✅ **Application Load Balancer**: Traffic distribution
+- ✅ **ECR Repositories**: Container image storage
+- ✅ **IAM Roles & Policies**: Secure service permissions
+- ✅ **CloudWatch Logs**: Application monitoring
+
+See [terraform/README.md](terraform/README.md) for detailed deployment instructions.
+
+### 🐳 Local Development
+
 ```bash
 # Clone the repository
 git clone https://github.com/maruthut/ratelock-auditor.git
 cd ratelock-auditor
 
-# Build and run RateSync service
+# Start local environment with DynamoDB
+.\start-local.ps1
+
+# Or manually build and run services
 cd service-ratesync
 docker build -t ratelock-ratesync .
 docker run -e RATE_CACHE_TABLE=RateCacheTable ratelock-ratesync
 
-# Build and run ConversionEngine service
 cd ../service-conversion
 docker build -t ratelock-conversion .
 docker run -p 8080:8080 -e RATE_CACHE_TABLE=RateCacheTable -e AUDIT_LOG_TABLE=ConversionAuditLogTable ratelock-conversion
 ```
 
-### AWS Deployment
-1. **DynamoDB Tables**: Create `RateCacheTable` and `ConversionAuditLogTable`
-2. **ECS Fargate**: Deploy both microservices as containers
-3. **API Gateway**: Configure public endpoints with rate limiting
-4. **EventBridge**: Schedule RateSync service execution
-5. **S3 + CloudFront**: Deploy frontend application
+### 🔄 Migration from CDK
+
+This project previously used AWS CDK but migrated to Terraform for:
+- **Reliable deployments** (CDK had hanging issues)
+- **Better state management** (CDK state inconsistencies)
+- **Industry standard tooling** (Terraform ecosystem)
+- **Easier debugging** (clearer error messages)
+
+The legacy CDK implementation is archived in `archive/cdk-legacy/`.
 
 ## 💰 Cost Optimization
 
@@ -179,8 +212,10 @@ docker run -p 8080:8080 -e RATE_CACHE_TABLE=RateCacheTable -e AUDIT_LOG_TABLE=Co
 - ✅ **Frontend**: Professional UI with audit trail display
 - ✅ **Docker**: Production-ready containers
 - ✅ **Code Quality**: Comprehensive error handling and logging
-- 🔄 **Infrastructure**: AWS CloudFormation/Terraform templates (next phase)
-- 🔄 **CI/CD**: GitHub Actions deployment pipeline (next phase)
+- ✅ **Infrastructure**: Terraform-based AWS deployment (reliable and repeatable)
+- 🔄 **Container Images**: Need to build and push to ECR repositories
+- 🔄 **API Gateway**: Integration layer (future enhancement)
+- 🔄 **CI/CD**: GitHub Actions deployment pipeline (future enhancement)
 
 ## 🤝 Contributing
 
