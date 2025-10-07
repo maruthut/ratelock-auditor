@@ -1,53 +1,116 @@
 # RateLock Infrastructure - Terraform
 
-This directory contains the Terraform Infrastructure as Code (IaC) for deploying the RateLock currency conversion application to AWS.
+This directory contains the Terraform Infrastructure as Code (IaC) for deploying the complete RateLock microservices currency conversion application to AWS.
 
-## 🏗️ Architecture Overview
+## 🏗️ Deployed Architecture Overview
 
-The infrastructure is organized into modular components:
+The infrastructure uses a modular microservices architecture with load balancing:
 
+- **Frontend**: S3 static website hosting with public access
+- **Load Balancer**: Application Load Balancer for traffic distribution
+- **Compute**: ECS Fargate cluster with auto-scaling microservices
 - **Database**: DynamoDB tables for rate caching and audit logging
-- **Compute**: ECS Fargate services, Application Load Balancer, ECR repositories
-- **API**: API Gateway integration (future enhancement)
-- **Frontend**: S3 + CloudFront for React app hosting (future enhancement)
+- **Security**: IAM roles, security groups, and least-privilege access
+- **Monitoring**: CloudWatch logs and application metrics
 
 ## 📁 Directory Structure
 
 ```
 terraform/
-├── modules/                 # Reusable Terraform modules
-│   ├── database/           # DynamoDB tables module
-│   ├── compute/            # ECS, ALB, ECR module
-│   ├── api/                # API Gateway module (future)
-│   └── frontend/           # S3 + CloudFront module (future)
-├── environments/           # Environment-specific configurations
-│   ├── dev/               # Development environment
-│   ├── staging/           # Staging environment (future)
-│   └── prod/              # Production environment (future)
-└── scripts/               # Deployment automation scripts
+├── modules/                 # Deployed Terraform modules
+│   ├── database/           # ✅ DynamoDB tables module (deployed)
+│   ├── compute/            # ✅ ECS, ALB, ECR module (deployed)
+│   └── frontend/           # ✅ S3 static website module (deployed)
+├── environments/           # Environment-specific configurations  
+│   └── dev/               # ✅ Development environment (deployed)
+│       ├── main.tf        # Main infrastructure configuration
+│       ├── outputs.tf     # Infrastructure outputs
+│       ├── terraform.tf   # Provider and backend configuration
+│       └── variables.tf   # Environment variables
+└── scripts/               # Deployment automation scripts (future)
     ├── deploy.ps1         # Main deployment script
     ├── status.ps1         # Infrastructure status checker
     └── destroy.ps1        # Safe destruction script
 ```
 
-## 🚀 Quick Start
+## 🌐 Currently Deployed Infrastructure
+
+### Production Environment: `dev` (us-east-2)
+
+**Frontend Layer:**
+- **S3 Bucket**: `ratelock-frontend-{env}-{random-suffix}`
+- **Website URL**: `http://{bucket-name}.s3-website.{region}.amazonaws.com`
+- **Features**: CORS enabled, public access, error handling
+
+**Load Balancing Layer:**
+- **ALB**: `{alb-name}.{region}.elb.amazonaws.com`
+- **Target Groups**: Health checks for ConversionEngine service
+- **Security Groups**: Controlled access (HTTP/80, container port/8080)
+
+**Compute Layer:**
+- **ECS Cluster**: `ratelock-{env}-cluster`
+- **Services**: RateSync (worker), ConversionEngine (API)
+- **ECR Repos**: 
+  - `{account-id}.dkr.ecr.{region}.amazonaws.com/ratelock/conversion-engine`
+  - `{account-id}.dkr.ecr.{region}.amazonaws.com/ratelock/ratesync`
+
+**Database Layer:**
+- **Rate Cache**: `RateCacheTable` (TTL enabled, 31 currencies)
+- **Audit Log**: `ConversionAuditLogTable` (permanent retention)
+
+## 🚀 Deployment Instructions
 
 ### Prerequisites
 
-1. **Terraform** >= 1.0 installed
+1. **Terraform** >= 1.13 installed
 2. **AWS CLI** configured with appropriate credentials
-3. **PowerShell** (for deployment scripts)
+3. **PowerShell** for command execution
+4. **Docker** for container image building (if modifying services)
 
-### Deploy Development Environment
+### Current Deployment Commands
 
 ```powershell
-# Navigate to terraform directory
-cd C:\Maruthu\Projects\ratelock-auditor\terraform
+# Navigate to development environment
+cd terraform/environments/dev
 
-# Deploy the entire development stack
-.\scripts\deploy.ps1 -Environment dev
+# Initialize Terraform (first time only)
+terraform init
 
-# Or deploy with auto-approval (no prompts)
+# Plan infrastructure changes
+terraform plan
+
+# Apply infrastructure (already deployed)
+terraform apply
+
+# Check current deployment status
+terraform output deployment_summary
+
+# View all outputs
+terraform output
+```
+
+### Infrastructure Outputs
+
+```powershell
+# View deployed infrastructure details
+PS> terraform output deployment_summary
+
+{
+  "cluster" = "ratelock-{env}-cluster"
+  "container_repositories" = {
+    "conversion_engine" = "{account-id}.dkr.ecr.{region}.amazonaws.com/ratelock/conversion-engine"
+    "ratesync" = "{account-id}.dkr.ecr.{region}.amazonaws.com/ratelock/ratesync"
+  }
+  "database_tables" = {
+    "audit_log" = "ConversionAuditLogTable"
+    "rate_cache" = "RateCacheTable"
+  }
+  "environment" = "dev"
+  "frontend_url" = "http://{bucket-name}.s3-website.{region}.amazonaws.com"
+  "load_balancer" = "{alb-name}.{region}.elb.amazonaws.com"
+  "region" = "us-east-2"
+}
+```
 .\scripts\deploy.ps1 -Environment dev -AutoApprove
 ```
 
