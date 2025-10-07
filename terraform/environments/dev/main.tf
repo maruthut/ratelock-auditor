@@ -60,3 +60,16 @@ module "compute" {
   
   depends_on = [module.database]
 }
+
+# Frontend Module - S3 Static Website
+module "frontend" {
+  source = "../../modules/frontend"
+
+  project_name    = var.project_name
+  environment     = var.environment
+  aws_region      = var.aws_region
+  common_tags     = local.common_tags
+  api_base_url    = module.compute.alb_dns_name
+  
+  depends_on = [module.compute]
+}
